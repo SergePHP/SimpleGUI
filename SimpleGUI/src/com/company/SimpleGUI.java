@@ -5,8 +5,8 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.border.*;
+import javax.swing.table.*;
 
 public class SimpleGUI extends JFrame{
 	private JButton fillTableButton = new JButton("Fill the Table");
@@ -28,8 +28,12 @@ public class SimpleGUI extends JFrame{
 		Container frame = this.getContentPane(); 
 		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-
+	    TitledBorder border = new TitledBorder("Работа с таблицей");
+	    border.setTitleJustification(TitledBorder.LEFT);
+	    border.setTitlePosition(TitledBorder.TOP);
+	    panel.setBorder(border);
 		frame.add(panel);
+		
 		panel.setLayout(new GridLayout(0, 2, 0, 0));
 		xTableAxisLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		yTableAxisLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -43,7 +47,7 @@ public class SimpleGUI extends JFrame{
 		panel.add(fillTableButton);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.add(table);
-		
+
 	}
 class FillTableButtonListener implements ActionListener{
 
