@@ -10,7 +10,7 @@ import javax.swing.table.*;
 
 public class SimpleGUI extends JFrame{
 
-	// Создаю панели для размещения элементов управления
+	// панели для размещения элементов управления
 	
 	private JPanel panelTop;
 	private JPanel panelSize;
@@ -20,13 +20,13 @@ public class SimpleGUI extends JFrame{
 	private JPanel panelListOp;
 	private JPanel panelButtom;
 	
-	// создаю все основные элементы
+	// все основные элементы
 	
 	private JTable table;
 	private JList<String> list;
 	private JTextArea textArea;
 	
-	// создаю все вспомогательные элементы
+	// все вспомогательные элементы
 	
 	private JScrollPane scrollPaneTable;
 	private JScrollPane scrollPaneList;
@@ -62,6 +62,7 @@ public class SimpleGUI extends JFrame{
 	private Component horizontalStrut_1;
 	private Component horizontalStrut_2;
 	
+	// массив для заполнения списка
 	
 	private final String[] listData = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
 	
