@@ -182,7 +182,7 @@ public class TaskUI {
 		
 		table = new JTable(50, 6);
 		scrollPane_1.setViewportView(table);
-		table.setBorder(new LineBorder(new Color(0, 0, 0)));
+		//table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		panel_3 = new JPanel();
 		frame.getContentPane().add(panel_3);
