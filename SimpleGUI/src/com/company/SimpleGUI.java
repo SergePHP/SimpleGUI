@@ -10,35 +10,41 @@ import javax.swing.table.*;
 
 public class SimpleGUI extends JFrame{
 
-	// Создаю панели для размещения элементов управления
+	// РЎРѕР·РґР°СЋ РїР°РЅРµР»Рё РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ СѓРїСЂР°РІР»РµРЅРёСЏ
+	
 	private JPanel panelTop = new JPanel();
 	private JPanel panelTSize = new JPanel();
 	private JPanel panelTFill = new JPanel();
 	private JPanel panelTFont = new JPanel();
 	private JPanel panelMiddle = new JPanel();
-	private JPanel panelLOp = new JPanel();
+	private JPanel panelListOp = new JPanel();
 	private JPanel panelButtom = new JPanel();
-	// Создаю все основные элементы
+	
+	// СЃРѕР·РґР°СЋ РІСЃРµ РѕСЃРЅРѕРІРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
+	
 	private JTable table = new JTable(50, 6);
 	private JList list =  new JList();
 	private JTextArea textArea = new JTextArea();
 	
+	// СЃРѕР·РґР°СЋ РІСЃРµ РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
 	
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPane_1;
-	private JLabel lblRows;
-	private JTextField textField;
-	private JLabel lblCols;
-	private JTextField textField_1;
-	private JButton btnSet;
-	private JTextField textField_2;
-	private JLabel label;
+	private JScrollPane scrollPaneTable = new JScrollPane();
+	private JScrollPane scrollPaneList = new JScrollPane();
+	private JScrollPane scrollPaneTextArea = new JScrollPane();
+	
+	private Box verticalBox = Box.createVerticalBox();
+	private JLabel labelRows = new JLabel("Rows: ");
+	private JTextField rows = new JTextField();
+	private JLabel labelCols = new JLabel("Cols: ");
+	private JTextField cols = new JTextField();
+	private JButton btnSet = new JButton("Set");
+	
+	private Box verticalBox_1 = Box.createVerticalBox();
+	private JLabel labelRange = new JLabel("Range: ");
+	private JTextField range;
 	private JButton btnFill;
-	private Box verticalBox;
-	private Box verticalBox_1;
-	private Component horizontalStrut;
-	private Component horizontalStrut_1;
-	private Box verticalBox_2;
+	
+	private Box verticalBox_2 = Box.createVerticalBox();
 	private JLabel lblNewLabel;
 	private JComboBox comboBox;
 	private Component horizontalStrut_2;
@@ -47,16 +53,17 @@ public class SimpleGUI extends JFrame{
 	private JButton btnNewButton;
 	private String[] listList;
 	
-	private JScrollPane scrollPane_2;
+
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
 	private Box horizontalBox;
 	private JButton btnNewButton_3;
 
-	
+	private Component horizontalStrut;
+	private Component horizontalStrut_1;
 
 	public SimpleGUI() {
-		super("ОП. Задание №1");
+		super("пїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ1");
 		this.setBounds(100, 100, 690, 690);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
