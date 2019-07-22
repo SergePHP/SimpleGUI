@@ -75,6 +75,7 @@ public class SimpleGUI extends JFrame{
 		frame.add(panelTop);
 		panelTop.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
+		
 
 
 	}
