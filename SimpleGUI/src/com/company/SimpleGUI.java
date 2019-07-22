@@ -22,46 +22,48 @@ public class SimpleGUI extends JFrame{
 	
 	// создаю все основные элементы
 	
-	private JTable table = new JTable(50, 6);
-	private JList list =  new JList();
-	private JTextArea textArea = new JTextArea();
+	private JTable table;
+	private JList<String> list;
+	private JTextArea textArea;
 	
 	// создаю все вспомогательные элементы
 	
-	private JScrollPane scrollPaneTable = new JScrollPane();
-	private JScrollPane scrollPaneList = new JScrollPane();
-	private JScrollPane scrollPaneTextArea = new JScrollPane();
+	private JScrollPane scrollPaneTable;
+	private JScrollPane scrollPaneList;
+	private JScrollPane scrollPaneTextArea;
 	
-	private Box verticalBox = Box.createVerticalBox();
-	private JLabel labelRows = new JLabel("Rows: ");
-	private JTextField rows = new JTextField();
-	private JLabel labelCols = new JLabel("Cols: ");
-	private JTextField cols = new JTextField();
-	private JButton btnSet = new JButton("Set");
+	private Box verticalBox;
+	private JLabel labelRows;
+	private JTextField rows;
+	private JLabel labelCols;
+	private JTextField cols;
+	private JButton btnSet;
 	
-	private Box verticalBox_1 = Box.createVerticalBox();
-	private JLabel labelRange = new JLabel("Range: ");
-	private JTextField range  = new JTextField();
-	private JButton btnFill = new JButton("Fill");
+	private Box verticalBox_1;
+	private JLabel labelRange;
+	private JTextField range;
+	private JButton btnFill;
 	
-	private Box verticalBox_2 = Box.createVerticalBox();
-	private JLabel labelFontList = new JLabel("Font List");
-	private JComboBox comboBoxFontList = new JComboBox();
+	private Box verticalBox_2;
+	private JLabel labelFontList;
+	private JComboBox comboBoxFontList;
 	
-	private Box verticalBox_3 = Box.createVerticalBox();
-	private JLabel labelFontDialog = new JLabel("Font dialog");
-	private JButton btnFontDlg = new JButton("Choice font");
+	private Box verticalBox_3;
+	private JLabel labelFontDialog;
+	private JButton btnFontDlg;
 
-	private JButton btnSetColor = new JButton("Set color");
-	private JButton btnIncSize = new JButton("Increase size");
+	private JButton btnSetColor;
+	private JButton btnIncSize;
 	
-	private Box horizontalBox = Box.createHorizontalBox();
-	private JButton btnOpen = new JButton("Open");
+	private Box horizontalBox;
+	private JButton btnOpen;
 
-	private Component horizontalStrut = Box.createHorizontalStrut(20);
-	private Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-	private Component horizontalStrut_2 = Box.createHorizontalStrut(20);
+	private Component horizontalStrut;
+	private Component horizontalStrut_1;
+	private Component horizontalStrut_2;
 	
+	
+	private final String[] listData = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
 	
 
 	public SimpleGUI() {
@@ -89,79 +91,121 @@ public class SimpleGUI extends JFrame{
 		
 		panelSize.setBorder(BorderFactory.createTitledBorder("Table size"));
 		panelTop.add(panelSize);
+		
+		verticalBox = Box.createVerticalBox();
 		panelSize.add(verticalBox);
+		
+		labelRows = new JLabel("Rows: ");
 		verticalBox.add(labelRows);
+		
+		rows = new JTextField();
 		verticalBox.add(rows);
+		
+		labelCols = new JLabel("Cols: ");
 		verticalBox.add(labelCols);
+		
+		cols = new JTextField();
 		verticalBox.add(cols);
+		
 		rows.setColumns(5);
 		cols.setColumns(5);
+		
+		btnSet = new JButton("Set");
 		verticalBox.add(btnSet);
 		btnSet.addActionListener(new TableSizeButtonListener());
 		
+		horizontalStrut = Box.createHorizontalStrut(20);
 		panelTop.add(horizontalStrut);
 		
 		panelFill.setBorder(BorderFactory.createTitledBorder("Filling the table"));
 		panelTop.add(panelFill);
+		
+		verticalBox_1 = Box.createVerticalBox();
 		panelFill.add(verticalBox_1);
+		
+		labelRange = new JLabel("Range:");
 		verticalBox_1.add(labelRange);
+		
+		range = new JTextField();
 		verticalBox_1.add(range);
 		range.setColumns(10);
+		
+		btnFill = new JButton("Fill");
 		verticalBox_1.add(btnFill);
 		
+		horizontalStrut_1 = Box.createHorizontalStrut(20);
 		panelTop.add(horizontalStrut_1);
 		
 		panelFont.setBorder(BorderFactory.createTitledBorder("Font operations"));
 		panelTop.add(panelFont);
+		verticalBox_2 = Box.createVerticalBox();
 		panelFont.add(verticalBox_2);
+		
+		labelFontList = new JLabel("Font List");
 		verticalBox_2.add(labelFontList);
+		
+		comboBoxFontList = new JComboBox();
 		verticalBox_2.add(comboBoxFontList);
 		
+		horizontalStrut_2 = Box.createHorizontalStrut(20);
 		panelFont.add(horizontalStrut_2);
+		verticalBox_3 = Box.createVerticalBox();
 		panelFont.add(verticalBox_3);
+		
+		labelFontDialog = new JLabel("Font dialog");
 		verticalBox_3.add(labelFontDialog);
+		
+		btnFontDlg = new JButton("Choice font");
 		verticalBox_3.add(btnFontDlg);
 		
+		//
 		// создаю вторую строку в основном окне
+		//
 		
+		scrollPaneTable = new JScrollPane();
 		frame.add(scrollPaneTable);
+		table  = new JTable(50, 6);
 		scrollPaneTable.setViewportView(table);
 		
+		//
 		// создаю третью строку в основном окне
+		//
 		
 		panelMiddle = new JPanel();
 		panelListOp = new JPanel();
 		frame.add(panelMiddle);
 		panelMiddle.add(panelListOp);
 		panelListOp.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		btnSetColor = new JButton("Set color");
+		btnIncSize = new JButton("Increase size");
 		panelListOp.add(btnSetColor);
 		panelListOp.add(btnIncSize);
+		
+		scrollPaneList = new JScrollPane();	
 		panelMiddle.add(scrollPaneList);
 		
-		// создаю список и заполняю значениями 
-		
-		list = new JList();
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		
+		list = new JList<String>(listData); // создаю список и заполняю значениями 
+
 		scrollPaneList.setViewportView(list);
 		list.setPreferredSize(new Dimension(200, 180));
 		
+		//
 		// создаю четвертую строку в основном окне
+		//
 		
 		panelButtom = new JPanel();
+		textArea = new JTextArea();
 		frame.add(panelButtom);
 		panelButtom.setLayout(new GridLayout(0, 1, 0, 0));
+		scrollPaneTextArea = new JScrollPane();
 		panelButtom.add(scrollPaneTextArea);
 		scrollPaneTextArea.setViewportView(textArea);
+		
+		horizontalBox = Box.createHorizontalBox();
 		scrollPaneTextArea.setRowHeaderView(horizontalBox);
+		
+		btnOpen = new JButton("Open");
 		horizontalBox.add(btnOpen);
 
 	}
