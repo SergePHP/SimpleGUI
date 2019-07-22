@@ -41,7 +41,7 @@ public class SimpleGUI extends JFrame{
 	
 	private Box verticalBox_1 = Box.createVerticalBox();
 	private JLabel labelRange = new JLabel("Range: ");
-	private JTextField range;
+	private JTextField range  = new JTextField();
 	private JButton btnFill;
 	
 	private Box verticalBox_2 = Box.createVerticalBox();
