@@ -9,44 +9,61 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 public class SimpleGUI extends JFrame{
-	private JButton fillTableButton = new JButton("Fill the Table");
-	private JTextField xTableAxisDimField = new JTextField("", 5);
-	private JTextField yTableAxisDimField = new JTextField("", 5);
-	private JTextField rangeField = new JTextField("", 5);
-	private JLabel xTableAxisLabel = new JLabel("X: ");
-	private JLabel yTableAxisLabel = new JLabel("Y: ");
 
-	private JPanel panel = new JPanel();
-	private JTable table = new JTable(5, 2);
+	// Создаю панели для размещения элементов управления
+	private JPanel panelTop = new JPanel();
+	private JPanel panelTSize = new JPanel();
+	private JPanel panelTFill = new JPanel();
+	private JPanel panelTFont = new JPanel();
+	private JPanel panelMiddle = new JPanel();
+	private JPanel panelLOp = new JPanel();
+	private JPanel panelButtom = new JPanel();
+	// Создаю все основные элементы
+	private JTable table = new JTable(50, 6);
+	private JList list =  new JList();
+	private JTextArea textArea = new JTextArea();
+	
+	
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
+	private JLabel lblRows;
+	private JTextField textField;
+	private JLabel lblCols;
+	private JTextField textField_1;
+	private JButton btnSet;
+	private JTextField textField_2;
+	private JLabel label;
+	private JButton btnFill;
+	private Box verticalBox;
+	private Box verticalBox_1;
+	private Component horizontalStrut;
+	private Component horizontalStrut_1;
+	private Box verticalBox_2;
+	private JLabel lblNewLabel;
+	private JComboBox comboBox;
+	private Component horizontalStrut_2;
+	private Box verticalBox_3;
+	private JLabel lblNewLabel_1;
+	private JButton btnNewButton;
+	private String[] listList;
+	
+	private JScrollPane scrollPane_2;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	private Box horizontalBox;
+	private JButton btnNewButton_3;
 
+	
 
 	public SimpleGUI() {
 		super("ОП. Задание №1");
-		this.setBounds(100, 100, 700, 500);
+		this.setBounds(100, 100, 690, 690);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Container frame = this.getContentPane(); 
-		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		frame.setLayout(new GridLayout(0, 1, 0, 0));
 		
-	    TitledBorder border = new TitledBorder("Работа с таблицей");
-	    border.setTitleJustification(TitledBorder.LEFT);
-	    border.setTitlePosition(TitledBorder.TOP);
-	    panel.setBorder(border);
-		frame.add(panel);
-		
-		panel.setLayout(new GridLayout(0, 2, 0, 0));
-		xTableAxisLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		yTableAxisLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		panel.add(xTableAxisLabel);
-		panel.add(xTableAxisDimField);
-		panel.add(yTableAxisLabel);
-		panel.add(yTableAxisDimField);
 
-		panel.add(rangeField);
-		fillTableButton.addActionListener(new FillTableButtonListener ());
-		panel.add(fillTableButton);
-		table.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.add(table);
 
 	}
 class FillTableButtonListener implements ActionListener{
