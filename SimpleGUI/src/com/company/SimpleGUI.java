@@ -165,8 +165,11 @@ public class SimpleGUI extends JFrame{
 		
 		scrollPaneTable = new JScrollPane();
 		frame.add(scrollPaneTable);
-		table  = new JTable(50, 6);
+		table  = new JTable(10, 6);
 		scrollPaneTable.setViewportView(table);
+		
+		cols.setText(Integer.toString(table.getColumnCount()));
+		rows.setText(Integer.toString(table.getRowCount()));
 		
 		//
 		// создаю третью строку в основном окне
@@ -214,21 +217,24 @@ class TableSizeButtonListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-		tableModel.setRowCount(0);
-		
-		Vector<String> row = new Vector<>();
-		
-		for (int i = 0; i < 10; i++) {
-			row.add("");
-			}
-		tableModel.setColumnIdentifiers(row);
-		for (int i = 0; i < 10; i++) {
-			tableModel.addRow(row);
-		}
 
+		int x = 0;
+		int y = 0;
+		try {
+			x = Integer.valueOf(rows.getText());
+			y = Integer.valueOf(cols.getText());
+		} catch (NumberFormatException e1) {
+			JOptionPane.showMessageDialog(null, "Wrong rows/cols values format.\nOnly integer values allowed");
 		}
+		
+		if(x != 0 || y != 0) {
+		
+			DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+			
+			tableModel.setRowCount(x);
+			tableModel.setColumnCount(y);
+		}
+	}
 	
 	}
 }
