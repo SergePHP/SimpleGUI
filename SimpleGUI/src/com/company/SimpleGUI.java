@@ -112,8 +112,8 @@ public class SimpleGUI extends JFrame{
 		cols.setColumns(5);
 		
 		btnSet = new JButton("Set");
-		verticalBox.add(btnSet);
 		btnSet.addActionListener(new TableSizeButtonListener());
+		verticalBox.add(btnSet);
 		
 		horizontalStrut = Box.createHorizontalStrut(20);
 		panelTop.add(horizontalStrut);
@@ -132,6 +132,7 @@ public class SimpleGUI extends JFrame{
 		range.setColumns(10);
 		
 		btnFill = new JButton("Fill");
+		btnFill.addActionListener(new TableFillButtonListener());
 		verticalBox_1.add(btnFill);
 		
 		horizontalStrut_1 = Box.createHorizontalStrut(20);
@@ -162,11 +163,12 @@ public class SimpleGUI extends JFrame{
 		//
 		// создаю вторую строку в основном окне
 		//
-		
-		scrollPaneTable = new JScrollPane();
+
+		table  = new JTable(10, 10);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		scrollPaneTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		frame.add(scrollPaneTable);
-		table  = new JTable(10, 6);
-		scrollPaneTable.setViewportView(table);
+		//scrollPaneTable.setViewportView(table);
 		
 		cols.setText(Integer.toString(table.getColumnCount()));
 		rows.setText(Integer.toString(table.getRowCount()));
@@ -224,7 +226,8 @@ class TableSizeButtonListener implements ActionListener{
 			x = Integer.valueOf(rows.getText());
 			y = Integer.valueOf(cols.getText());
 		} catch (NumberFormatException e1) {
-			JOptionPane.showMessageDialog(null, "Wrong rows/cols values format.\nOnly integer values allowed");
+			JOptionPane.showMessageDialog(null, "Incorrect row/column value format.\nOnly integer values are allowed", 
+					"Warning", JOptionPane.WARNING_MESSAGE);
 		}
 		
 		if(x != 0 || y != 0) {
@@ -233,8 +236,46 @@ class TableSizeButtonListener implements ActionListener{
 			
 			tableModel.setRowCount(x);
 			tableModel.setColumnCount(y);
+			}
 		}
-	}
 	
+	}
+class TableFillButtonListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		String[] bounds = range.getText().split("-");
+		int x = 0;
+		int y = 0;
+		
+		try {
+			x = Integer.valueOf(bounds[0]);
+			y = Integer.valueOf(bounds[1]);
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Incorrect range value format.\nUse the following format range, for example, 1-125", 
+					"Warning", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		
+		int currentRows = tableModel.getRowCount();
+		tableModel.setRowCount(0);
+
+		for (int i = 0; i < currentRows; i++) {
+			Vector<String> row = new Vector<String>();
+			for (int j = 0; j < table.getColumnCount(); j++) {
+				if(x <= y) {
+					row.add(Integer.toString(x));
+					x++;
+				} else {
+					row.add("");
+				}
+			}
+			tableModel.addRow(row);
+		}
+
+		}
+
 	}
 }
