@@ -69,7 +69,7 @@ public class SimpleGUI extends JFrame{
 
 	public SimpleGUI() {
 		super("ОП. Задание №1");
-		this.setBounds(100, 100, 690, 690);
+		this.setBounds(100, 100, 750, 650);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Container frame = this.getContentPane();
@@ -80,29 +80,33 @@ public class SimpleGUI extends JFrame{
 		
 		frame.setLayout(new GridLayout(0, 1, 0, 0));
 		
+		//
 		// создаю первую строку в основном окне
+		//
 		
 		panelTop = new JPanel();
 		panelSize = new JPanel();
 		panelFill = new JPanel();
 		panelFont = new JPanel();
 		
+		// формирую элементы для изменения размера таблицы
+	
 		frame.add(panelTop);
 		panelTop.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		panelSize.setBorder(BorderFactory.createTitledBorder("Table size"));
+		panelSize.setBorder(BorderFactory.createTitledBorder("Размер таблицы"));
 		panelTop.add(panelSize);
 		
 		verticalBox = Box.createVerticalBox();
 		panelSize.add(verticalBox);
 		
-		labelRows = new JLabel("Rows: ");
+		labelRows = new JLabel("Строк: ");
 		verticalBox.add(labelRows);
 		
 		rows = new JTextField();
 		verticalBox.add(rows);
 		
-		labelCols = new JLabel("Cols: ");
+		labelCols = new JLabel("Столбцов: ");
 		verticalBox.add(labelCols);
 		
 		cols = new JTextField();
@@ -111,53 +115,65 @@ public class SimpleGUI extends JFrame{
 		rows.setColumns(5);
 		cols.setColumns(5);
 		
-		btnSet = new JButton("Set");
+		btnSet = new JButton("Установить");
 		btnSet.addActionListener(new TableSizeButtonListener());
 		verticalBox.add(btnSet);
 		
 		horizontalStrut = Box.createHorizontalStrut(20);
 		panelTop.add(horizontalStrut);
 		
-		panelFill.setBorder(BorderFactory.createTitledBorder("Filling the table"));
+		// формирую элементы для заполения таблицы, формат диспазона: 1-100
+		
+		panelFill.setBorder(BorderFactory.createTitledBorder("Заполнить таблицу"));
 		panelTop.add(panelFill);
 		
 		verticalBox_1 = Box.createVerticalBox();
 		panelFill.add(verticalBox_1);
 		
-		labelRange = new JLabel("Range:");
+		labelRange = new JLabel("Диапазон:");
 		verticalBox_1.add(labelRange);
 		
 		range = new JTextField();
 		verticalBox_1.add(range);
 		range.setColumns(10);
 		
-		btnFill = new JButton("Fill");
+		btnFill = new JButton("Заполнить");
 		btnFill.addActionListener(new TableFillButtonListener());
 		verticalBox_1.add(btnFill);
 		
 		horizontalStrut_1 = Box.createHorizontalStrut(20);
 		panelTop.add(horizontalStrut_1);
 		
-		panelFont.setBorder(BorderFactory.createTitledBorder("Font operations"));
+		// создаю элементы для форматирования текста в таблице заданным шрифтом
+		
+		panelFont.setBorder(BorderFactory.createTitledBorder("Выбор шрифта"));
 		panelTop.add(panelFont);
 		verticalBox_2 = Box.createVerticalBox();
 		panelFont.add(verticalBox_2);
 		
-		labelFontList = new JLabel("Font List");
+		labelFontList = new JLabel("Список шрифтов");
 		verticalBox_2.add(labelFontList);
 		
-		comboBoxFontList = new JComboBox();
+		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+		Vector comboBoxItems=new Vector();
+		for (String string : fonts) {
+			comboBoxItems.add(string);
+		}
+		final DefaultComboBoxModel comboModel = new DefaultComboBoxModel(comboBoxItems);
+		
+		comboBoxFontList = new JComboBox(comboModel);
 		verticalBox_2.add(comboBoxFontList);
+		
 		
 		horizontalStrut_2 = Box.createHorizontalStrut(20);
 		panelFont.add(horizontalStrut_2);
 		verticalBox_3 = Box.createVerticalBox();
 		panelFont.add(verticalBox_3);
 		
-		labelFontDialog = new JLabel("Font dialog");
+		labelFontDialog = new JLabel("Стандартный диалог");
 		verticalBox_3.add(labelFontDialog);
 		
-		btnFontDlg = new JButton("Choice font");
+		btnFontDlg = new JButton("Выбрать шрифт");
 		verticalBox_3.add(btnFontDlg);
 		
 		//
