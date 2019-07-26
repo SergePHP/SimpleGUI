@@ -69,7 +69,7 @@ public class SimpleGUI extends JFrame{
 
 	public SimpleGUI() {
 		super("ОП. Задание №1");
-		this.setBounds(100, 100, 750, 650);
+		this.setBounds(100, 100, 900, 650);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Container frame = this.getContentPane();
@@ -116,6 +116,9 @@ public class SimpleGUI extends JFrame{
 		cols.setColumns(5);
 		
 		btnSet = new JButton("Установить");
+
+		// создаю обработчик событий при нажатии кнопки 
+		
 		btnSet.addActionListener(new TableSizeButtonListener());
 		verticalBox.add(btnSet);
 		
@@ -133,11 +136,14 @@ public class SimpleGUI extends JFrame{
 		labelRange = new JLabel("Диапазон:");
 		verticalBox_1.add(labelRange);
 		
-		range = new JTextField();
+		range = new JTextField("1-100");
 		verticalBox_1.add(range);
 		range.setColumns(10);
 		
 		btnFill = new JButton("Заполнить");
+		
+		// создаю обработчик событий при нажатии кнопки 
+		
 		btnFill.addActionListener(new TableFillButtonListener());
 		verticalBox_1.add(btnFill);
 		
@@ -154,14 +160,15 @@ public class SimpleGUI extends JFrame{
 		labelFontList = new JLabel("Список шрифтов");
 		verticalBox_2.add(labelFontList);
 		
+		// получаю список всех шрифтов
+		
 		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-		Vector comboBoxItems=new Vector();
-		for (String string : fonts) {
-			comboBoxItems.add(string);
-		}
-		final DefaultComboBoxModel comboModel = new DefaultComboBoxModel(comboBoxItems);
+		final DefaultComboBoxModel comboModel = new DefaultComboBoxModel(fonts);
 		
 		comboBoxFontList = new JComboBox(comboModel);
+		
+		comboBoxFontList.addActionListener(new conboBoxActionListener());
+		
 		verticalBox_2.add(comboBoxFontList);
 		
 		
@@ -294,4 +301,15 @@ class TableFillButtonListener implements ActionListener{
 		}
 
 	}
+class conboBoxActionListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		String selectedFont = String.valueOf(comboBoxFontList.getSelectedItem());
+		Font font = new Font(selectedFont, table.getFont().getStyle(), table.getFont().getSize());
+		table.setFont(font);
+	}
+	
+}
 }
