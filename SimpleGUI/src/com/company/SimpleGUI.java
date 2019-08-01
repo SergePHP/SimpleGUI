@@ -2,11 +2,19 @@ package com.company;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.ColorModel;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
+
+//import org.eclipse.swt.graphics.Font;
+//import org.eclipse.swt.graphics.FontData;
+//import org.eclipse.swt.widgets.FontDialog;
+//import org.eclipse.swt.widgets.Shell;
 
 public class SimpleGUI extends JFrame{
 
@@ -62,17 +70,23 @@ public class SimpleGUI extends JFrame{
 	private Component horizontalStrut_1;
 	private Component horizontalStrut_2;
 	
+	private JFileChooser fileChooser = new JFileChooser();
+	private JColorChooser colorChooser = new JColorChooser();
+	
+	private Color color = new Color(184,207,229);
+	
+	private Container frame;
+	
 	// массив для заполнения списка
 	
-	private final String[] listData = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
+	private final String[] listData = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 	
 
 	public SimpleGUI() {
 		super("ОП. Задание №1");
-		this.setBounds(100, 100, 900, 650);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(new Dimension(900, 650));
 		
-		Container frame = this.getContentPane();
+		frame = this.getContentPane();
 		
 		// Для расположения элементов в основном окне 
 		// использую Менеджер элементов GridLayout
@@ -181,6 +195,7 @@ public class SimpleGUI extends JFrame{
 		verticalBox_3.add(labelFontDialog);
 		
 		btnFontDlg = new JButton("Выбрать шрифт");
+		btnFontDlg.addActionListener(new FontDialogActionListener());
 		verticalBox_3.add(btnFontDlg);
 		
 		//
@@ -191,8 +206,7 @@ public class SimpleGUI extends JFrame{
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPaneTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		frame.add(scrollPaneTable);
-		//scrollPaneTable.setViewportView(table);
-		
+
 		cols.setText(Integer.toString(table.getColumnCount()));
 		rows.setText(Integer.toString(table.getRowCount()));
 		
@@ -207,17 +221,20 @@ public class SimpleGUI extends JFrame{
 		panelListOp.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		btnSetColor = new JButton("Set color");
+		btnSetColor.addActionListener(new colorButtonListener());
 		btnIncSize = new JButton("Increase size");
+		btnIncSize.addActionListener(new incrButtonListener());
 		panelListOp.add(btnSetColor);
 		panelListOp.add(btnIncSize);
 		
 		scrollPaneList = new JScrollPane();	
 		panelMiddle.add(scrollPaneList);
 		
-		list = new JList<String>(listData); // создаю список и заполняю значениями 
-
+		list = new JList<String>(listData); // создаю список и заполняю значениями
+		list.setCellRenderer(new listCellRenderer()); // назначаю пользовательский 
+													  // визуализатор строк списка
+		
 		scrollPaneList.setViewportView(list);
-		list.setPreferredSize(new Dimension(200, 180));
 		
 		//
 		// создаю четвертую строку в основном окне
@@ -235,9 +252,83 @@ public class SimpleGUI extends JFrame{
 		scrollPaneTextArea.setRowHeaderView(horizontalBox);
 		
 		btnOpen = new JButton("Open");
+		btnOpen.addActionListener(new openButtonListener());
 		horizontalBox.add(btnOpen);
 
 	}
+class colorButtonListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		color = JColorChooser.showDialog(SimpleGUI.this, "Выбор цвета", Color.WHITE);
+		list.updateUI();
+	}
+	
+}
+class listCellRenderer extends DefaultListCellRenderer{
+	@Override
+    public Component getListCellRendererComponent(JList list, Object value, int index, 
+              boolean isSelected, boolean cellHasFocus) {
+		
+		Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (isSelected) {
+            c.setBackground(color);
+       }
+		return c;
+	}
+}
+class incrButtonListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		/*
+		 *  AWT dialog test
+		 * 
+		 * 
+		 */
+//		Shell shell = new Shell();
+//		FontDialog dlg = new FontDialog(shell);
+//		
+//	    FontData fontData = dlg.open();
+//	    if (fontData != null) {
+//	      Font font = new Font(shell.getDisplay(), fontData);
+//
+//	      font.dispose();
+//	    }
+		
+	}
+	
+}
+	
+class openButtonListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(SimpleGUI.this)) {
+			File file = new File(fileChooser.getSelectedFile().getPath());
+			int size = (int)file.length();
+			int c = 0;
+			FileReader in;
+			try {
+				in = new FileReader(file);
+				char[] data = new char[size];
+				while (in.ready()) {
+					c += in.read(data, c, size-c);
+				}
+				in.close();
+				textArea.setText(new String(data, 0, c));
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(null, "Ошибка работы с файлом.", 
+						"Ошибка", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+	}
+	
+}
+	
 class TableSizeButtonListener implements ActionListener{
 
 	@Override
@@ -253,13 +344,10 @@ class TableSizeButtonListener implements ActionListener{
 					"Warning", JOptionPane.WARNING_MESSAGE);
 		}
 		
-		if(x != 0 || y != 0) {
-		
 			DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
 			
 			tableModel.setRowCount(x);
 			tableModel.setColumnCount(y);
-			}
 		}
 	
 	}
@@ -309,6 +397,21 @@ class conboBoxActionListener implements ActionListener{
 		String selectedFont = String.valueOf(comboBoxFontList.getSelectedItem());
 		Font font = new Font(selectedFont, table.getFont().getStyle(), table.getFont().getSize());
 		table.setFont(font);
+		}
+
+	}
+class FontDialogActionListener implements ActionListener{
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+		String selectedFont = fonts[0];
+		Font font = new Font(selectedFont, table.getFont().getStyle(), table.getFont().getSize());
+		
+		FontChooser fc = new FontChooser(SimpleGUI.this, true, font);
+		fc.setVisible(true);
+
 	}
 	
 }
