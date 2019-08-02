@@ -121,6 +121,7 @@ public class task1GUI {
 		/*
 		 *  Создаю кнопку и назначаю обработчик события в анонимном классе
 		 */
+		new Label(tSizeGroup, SWT.NONE);
 		Button btnTableSize = new Button(tSizeGroup, SWT.NONE);
 		btnTableSize.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -130,7 +131,6 @@ public class task1GUI {
 		});
 		btnTableSize.setBounds(0, 0, 97, 29);
 		btnTableSize.setText("Установить");
-		new Label(tSizeGroup, SWT.NONE);
 		
 		
 		Group tPopulateGroup = new Group(shell, SWT.NONE);
@@ -149,6 +149,7 @@ public class task1GUI {
 		/*
 		 *  Создаю кнопку и назначаю обработчик события в анонимном классе
 		 */
+		new Label(tPopulateGroup, SWT.NONE);
 		btnTablePopulate = new Button(tPopulateGroup, SWT.NONE);
 		btnTablePopulate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -157,7 +158,6 @@ public class task1GUI {
 			}
 		});
 		btnTablePopulate.setText("Заполнить");
-		new Label(tPopulateGroup, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		
 		
@@ -251,39 +251,36 @@ public class task1GUI {
 		
 		label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		
-		styledText = new StyledText(shell, SWT.BORDER);
+		styledText = new StyledText(shell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		
-		btnOpenFile = new Button(shell, SWT.NONE);
-		btnOpenFile.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openFileAction(e);
-			}
-		});
-		btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnOpenFile.setText("Открыть файл");
+				
+				btnOpenFile = new Button(shell, SWT.NONE);
+				btnOpenFile.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						openFileAction(e);
+					}
+				});
+				btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+				btnOpenFile.setText("Открыть файл");
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
-
 
 	}
 	private void openFileAction(SelectionEvent e) {
 		
         FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
         fileDialog.setText("Открыть");
-        fileDialog.setFilterPath("C:/");
-        //String[] filterExt = { "*.txt", "*.doc", ".rtf", "*.*" };
-        //fileDialog.setFilterExtensions(filterExt);
+        fileDialog.setFilterPath("/");
+        String[] filterExt = {"*.txt", "*.*"};
+        fileDialog.setFilterExtensions(filterExt);
         if (fileDialog.open() != null) {
 
-        	//String s = fileDialog.getFilterPath() + fileDialog.getFileName();
-        	String s = fileDialog.getFileName();
-        	String s1 = fileDialog.getFilterPath();
-        	File file = new File(fileDialog.getFileName());
+        	File file = new File(fileDialog.getFilterPath(), fileDialog.getFileName());
 			int size = (int)file.length();
 			int c = 0;
 			FileReader in;
