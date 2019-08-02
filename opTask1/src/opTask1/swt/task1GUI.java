@@ -291,15 +291,13 @@ public class task1GUI {
 					c += in.read(data, c, size-c);
 				}
 				in.close();
-				
 				styledText.setText(new String(data, 0, c));
+				
 			} catch (Exception e1) {
 				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-		        
 		        messageBox.setText("Ошибка");
 		        messageBox.setMessage("Ошибка работы с файлом\n" + e1.getMessage());
 		        messageBox.open();
-
 			}
 		}
 	}
