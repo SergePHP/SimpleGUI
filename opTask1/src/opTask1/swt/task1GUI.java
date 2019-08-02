@@ -93,7 +93,7 @@ public class task1GUI {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(1038, 692);
+		shell.setSize(1114, 772);
 		shell.setText("ОП. Задание №1");
 		shell.setLayout(new GridLayout(4, false));
 		/*
@@ -236,6 +236,12 @@ public class task1GUI {
 		listGroup.setLayout(new GridLayout(1, false));
 		
 		btnSelectColor = new Button(listGroup, SWT.NONE);
+		btnSelectColor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setColorAction(e);
+			}
+		});
 		btnSelectColor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnSelectColor.setBounds(0, 0, 97, 29);
 		btnSelectColor.setText("Установить цвет");
@@ -245,7 +251,7 @@ public class task1GUI {
 		btnIncSize.setBounds(0, 0, 97, 29);
 		btnIncSize.setText("Увеличить шрифт");
 		
-		List list = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		List list = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		GridData gd_list = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		gd_list.heightHint = 151;
 		list.setLayoutData(gd_list);
@@ -274,6 +280,11 @@ public class task1GUI {
 				btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 				btnOpenFile.setText("Открыть файл");
 
+	}
+	private void setColorAction(SelectionEvent e) {
+		ColorDialog colorDialog = new ColorDialog(shell);
+		colorDialog.setText("Выбрать цвет");
+		colorDialog.open();
 	}
 	private void openFileAction(SelectionEvent e) {
 		
