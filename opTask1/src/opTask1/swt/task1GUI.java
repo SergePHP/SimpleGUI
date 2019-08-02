@@ -1,46 +1,36 @@
 package opTask1.swt;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FontDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
 import swing2swt.layout.FlowLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Text;
 import org.omg.CORBA.FREE_MEM;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Group;
 import swing2swt.layout.BorderLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import swing2swt.layout.BoxLayout;
-import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import java.awt.Component;
 import javax.swing.Box;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-
 import org.eclipse.swt.awt.SWT_AWT;
 import java.awt.Panel;
+import java.io.File;
+import java.io.FileReader;
+import java.util.*;
+
 import javax.swing.JRootPane;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.TableColumn;
+import javax.swing.table.DefaultTableModel;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -56,17 +46,18 @@ public class task1GUI {
 	private Label lblNewLabel;
 	private Label lblNewLabel_1;
 	private Label lblNewLabel_2;
-	private Button btnTableFill;
+	private Button btnTablePopulate;
 	private Group tFontGroup;
 	private Label lblNewLabel_4;
 	private Button btnFontSelect;
 	private Table table;
-	private Group group;
+	private Group listGroup;
 	private StyledText styledText;
-	private Button btnNewButton;
-	private Button btnNewButton_1;
-	private Button btnNewButton_2;
+	private Button btnSelectColor;
+	private Button btnIncSize;
+	private Button btnOpenFile;
 	private Label label;
+	private Combo combo;
 
 	/**
 	 * Launch the application.
@@ -101,11 +92,14 @@ public class task1GUI {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(805, 587);
+		shell.setSize(1038, 692);
 		shell.setText("ОП. Задание №1");
-		shell.setLayout(new GridLayout(5, false));
+		shell.setLayout(new GridLayout(6, false));
 		
 		Group tSizeGroup = new Group(shell, SWT.NONE);
+		GridData gd_tSizeGroup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_tSizeGroup.widthHint = 183;
+		tSizeGroup.setLayoutData(gd_tSizeGroup);
 		tSizeGroup.setText("Размер таблицы");
 		tSizeGroup.setLayout(new GridLayout(2, false));
 		
@@ -113,37 +107,59 @@ public class task1GUI {
 		lblNewLabel.setText("Столбцов");
 		
 		cols = new Text(tSizeGroup, SWT.BORDER);
-		cols.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		cols.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cols.setBounds(0, 0, 81, 29);
+		cols.setText("10");
 		
 		lblNewLabel_1 = new Label(tSizeGroup, SWT.NONE);
 		lblNewLabel_1.setText("Строк");
 		
 		rows = new Text(tSizeGroup, SWT.BORDER);
-		rows.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		rows.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		rows.setBounds(0, 0, 81, 29);
-		new Label(tSizeGroup, SWT.NONE);
-		
+		rows.setText("10");
+		/*
+		 *  Создаю кнопку и назначаю обработчик события в анонимном классе
+		 */
 		Button btnTableSize = new Button(tSizeGroup, SWT.NONE);
+		btnTableSize.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableSizeAction(e);
+			}
+		});
 		btnTableSize.setBounds(0, 0, 97, 29);
 		btnTableSize.setText("Установить");
+		new Label(tSizeGroup, SWT.NONE);
 		
-		Group tFillGroup = new Group(shell, SWT.NONE);
-		tFillGroup.setText("Заполнение таблицы");
-		tFillGroup.setLayout(new GridLayout(2, false));
 		
-		lblNewLabel_2 = new Label(tFillGroup, SWT.NONE);
+		Group tPopulateGroup = new Group(shell, SWT.NONE);
+		tPopulateGroup.setText("Заполнение таблицы");
+		tPopulateGroup.setLayout(new GridLayout(2, false));
+		
+		lblNewLabel_2 = new Label(tPopulateGroup, SWT.NONE);
 		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_2.setText("Диапазон");
 		
-		range = new Text(tFillGroup, SWT.BORDER);
+		range = new Text(tPopulateGroup, SWT.BORDER);
 		range.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		range.setBounds(0, 0, 81, 29);
-		new Label(tFillGroup, SWT.NONE);
+		range.setText("1-100");
 		
-		btnTableFill = new Button(tFillGroup, SWT.NONE);
-		btnTableFill.setText("Заполнить");
+		/*
+		 *  Создаю кнопку и назначаю обработчик события в анонимном классе
+		 */
+		btnTablePopulate = new Button(tPopulateGroup, SWT.NONE);
+		btnTablePopulate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tablePopulateAction(e);
+			}
+		});
+		btnTablePopulate.setText("Заполнить");
+		new Label(tPopulateGroup, SWT.NONE);
 		new Label(shell, SWT.NONE);
+		
 		
 		tFontGroup = new Group(shell, SWT.NONE);
 		tFontGroup.setText("Выбор шрифта");
@@ -157,7 +173,23 @@ public class task1GUI {
 		lblNewLabel_4 = new Label(tFontGroup, SWT.NONE);
 		lblNewLabel_4.setText("Стандартный диалог");
 		
-		Combo combo = new Combo(tFontGroup, SWT.NONE);
+		combo = new Combo(tFontGroup, SWT.NONE);
+		combo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				table.setRedraw(false);
+				String selectedFont = String.valueOf(combo.getText());
+				FontData fontData = table.getFont().getFontData()[0];
+				fontData.setName(selectedFont);
+				
+				Font font = new Font(shell.getDisplay(), fontData);
+				table.setFont(font);
+				for (TableColumn column: table.getColumns()) {
+					column.pack();
+				}
+			    table.setRedraw(true);
+			}
+		});
 		combo.setBounds(0, 0, 199, 29);
 		
 		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
@@ -169,40 +201,47 @@ public class task1GUI {
 		btnFontSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Shell shell = new Shell();
-				FontDialog dlg = new FontDialog(shell);
-				
-			    FontData fontData = dlg.open();
+
+				FontDialog fontDialog = new FontDialog(shell);
+			    FontData fontData = fontDialog.open();
 			    if (fontData != null) {
-			      Font font = new Font(shell.getDisplay(), fontData);
-		
-			      font.dispose();
+			    	
+			    	table.setRedraw(false);
+			    	Font font = new Font(shell.getDisplay(), fontData);
+			    	table.setFont(font);
+					for (TableColumn column: table.getColumns()) {
+						column.pack();
+					}
+				    table.setRedraw(true);
 			    }
 			}
 		});
 		btnFontSelect.setText("Выбрать шрифт");
 		btnFontSelect.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
 		
-		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 5, 1));
+		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 6, 1));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		group = new Group(shell, SWT.NONE);
-		group.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		group.setLayout(new GridLayout(1, false));
+		listGroup = new Group(shell, SWT.NONE);
+		listGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		listGroup.setLayout(new GridLayout(1, false));
 		
-		btnNewButton = new Button(group, SWT.NONE);
-		btnNewButton.setBounds(0, 0, 97, 29);
-		btnNewButton.setText("New Button");
+		btnSelectColor = new Button(listGroup, SWT.NONE);
+		btnSelectColor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnSelectColor.setBounds(0, 0, 97, 29);
+		btnSelectColor.setText("Установить цвет");
 		
-		btnNewButton_1 = new Button(group, SWT.NONE);
-		btnNewButton_1.setBounds(0, 0, 97, 29);
-		btnNewButton_1.setText("New Button");
+		btnIncSize = new Button(listGroup, SWT.NONE);
+		btnIncSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnIncSize.setBounds(0, 0, 97, 29);
+		btnIncSize.setText("Увеличить шрифт");
 		
 		List list = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData gd_list = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		GridData gd_list = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		gd_list.heightHint = 151;
 		list.setLayoutData(gd_list);
 
@@ -213,17 +252,139 @@ public class task1GUI {
 		label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		
 		styledText = new StyledText(shell, SWT.BORDER);
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		new Label(shell, SWT.NONE);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		
-		btnNewButton_2 = new Button(shell, SWT.NONE);
-		btnNewButton_2.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnNewButton_2.setText("New Button");
+		btnOpenFile = new Button(shell, SWT.NONE);
+		btnOpenFile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openFileAction(e);
+			}
+		});
+		btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		btnOpenFile.setText("Открыть файл");
+		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 
 
 	}
+	private void openFileAction(SelectionEvent e) {
+		
+        FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
+        fileDialog.setText("Открыть");
+        fileDialog.setFilterPath("C:/");
+        //String[] filterExt = { "*.txt", "*.doc", ".rtf", "*.*" };
+        //fileDialog.setFilterExtensions(filterExt);
+        if (fileDialog.open() != null) {
+
+        	//String s = fileDialog.getFilterPath() + fileDialog.getFileName();
+        	String s = fileDialog.getFileName();
+        	String s1 = fileDialog.getFilterPath();
+        	File file = new File(fileDialog.getFileName());
+			int size = (int)file.length();
+			int c = 0;
+			FileReader in;
+			try {
+				in = new FileReader(file);
+				char[] data = new char[size];
+				while (in.ready()) {
+					c += in.read(data, c, size-c);
+				}
+				in.close();
+				
+				styledText.setText(new String(data, 0, c));
+			} catch (Exception e1) {
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+		        
+		        messageBox.setText("Ошибка");
+		        messageBox.setMessage("Ошибка работы с файлом\n" + e1.getMessage());
+		        messageBox.open();
+
+			}
+		}
+	}
+	private void tableSizeAction(SelectionEvent e) {
+		
+		int x = 0;
+		int y = 0;
+		try {
+			x = Integer.valueOf(cols.getText());
+			y = Integer.valueOf(rows.getText());
+		} catch (NumberFormatException e1) {
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+	        
+	        messageBox.setText("Warning");
+	        messageBox.setMessage("Incorrect row/column value format.\nOnly integer values are allowed");
+	        messageBox.open();
+	        return;
+		}
+		
+		table.setRedraw(false);
+
+		if(table.getColumnCount() != x) {
+			/*
+			 * Удаляю заголовок таблицы
+			 */
+			while (table.getColumnCount() > 0) {
+			    table.getColumns()[0].dispose();
+			}
+			/*
+			 * Созданю новый заголовок таблицы
+			 */
+			for (int i = 0; i < x; i++) {
+				TableColumn column = new TableColumn(table, SWT.NULL);
+				column.setText("Col " + (i+1));	
+			}
+		}
+		/*
+		 * Удаляю все элементы таблицы
+		 * и указываю новое количество строк
+		 */
+		table.removeAll();
+		table.setItemCount(y);
+
+		for (TableColumn column: table.getColumns()) {
+			column.pack();
+		}
+	    table.setRedraw(true);
+	}
+	private void tablePopulateAction(SelectionEvent e) {
+		
+		String[] bounds = range.getText().split("-");
+		int x = 0;
+		int y = 0;
+		
+		try {
+			x = Integer.valueOf(bounds[0]);
+			y = Integer.valueOf(bounds[1]);
+		} catch (Exception e1) {
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+	        
+	        messageBox.setText("Warning");
+	        messageBox.setMessage("Incorrect range value format.\nUse the following format range, for example, 1-125");
+	        messageBox.open();
+	        return;
+		}
+		table.setRedraw(false);
+		
+		int totalRows = table.getItemCount();
+		table.removeAll();
+		table.setItemCount(totalRows);
+
+	    for (int i = 0; i < totalRows && x <= y; i++) {
+	    	TableItem item = table.getItem(i);
+	    	for (int j = 0; j < table.getColumnCount() && x <= y; j++) {
+					item.setText(j, Integer.toString(x));
+					x++;
+	    	}
+	    }
+		for (TableColumn column: table.getColumns()) {
+			column.pack();
+		}
+		table.setRedraw(true);
+	}
+	
 }
