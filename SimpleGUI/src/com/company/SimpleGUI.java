@@ -274,6 +274,11 @@ class listCellRenderer extends DefaultListCellRenderer{
 		Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (isSelected) {
             c.setBackground(color);
+            Font font = c.getFont();
+            font.getSize();
+            Font newFont = font.deriveFont(24.0F);
+    		c.setFont(newFont);
+
        }
 		return c;
 	}
