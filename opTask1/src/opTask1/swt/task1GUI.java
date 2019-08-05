@@ -6,7 +6,6 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Arrays;
@@ -14,6 +13,7 @@ import java.util.Arrays;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
@@ -48,6 +48,7 @@ public class task1GUI {
 	private javax.swing.JList list;
 	private javax.swing.DefaultListModel listModel;
 	private javax.swing.JScrollPane scrollPane;
+	private Label colorStatus;
 	
 	/**
 	 * Launch the application.
@@ -216,7 +217,7 @@ public class task1GUI {
 		
 		Label lblNewLabel_5 = new Label(listGroup, SWT.NONE);
 		lblNewLabel_5.setText("Индекс в списке");
-		lblNewLabel_5.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_5.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		
 		indexesString = new Text(listGroup, SWT.BORDER);
 		indexesString.addKeyListener(new KeyAdapter() {
@@ -232,8 +233,10 @@ public class task1GUI {
 		});
 		indexesString.setText("1,4,7");
 		indexesString.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		new Label(listGroup, SWT.NONE);
+		
+		colorStatus = new Label(listGroup, SWT.NONE);
+		colorStatus.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		colorStatus.setText("Цвет не выбран");
 		
 		btnSelectColor = new Button(listGroup, SWT.NONE);
 		btnSelectColor.addSelectionListener(new SelectionAdapter() {
@@ -262,7 +265,6 @@ public class task1GUI {
 		btnIncSize.setText("Увеличить шрифт\nна 5 пунктов");
 		
 		composite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-		//composite = new Composite(shell, SWT.EMBEDDED);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
 		frame = SWT_AWT.new_Frame(composite);
@@ -275,10 +277,10 @@ public class task1GUI {
 		panel.add(scrollPane);
 		
 		String[] fontsForList = fonts.clone();
-
 		for (int index = 0; index < fontsForList.length; index++) {
 			fontsForList[index] = index + ": " + fontsForList[index];
 		}
+
 		listModel = new javax.swing.DefaultListModel();
 		list = new javax.swing.JList(listModel);
 		
@@ -315,6 +317,9 @@ public class task1GUI {
 			RGB rgb = colorDialog.open();
 
 			if(rgb != null) {
+				colorStatus.setText("Выбран цвет");
+				colorStatus.setBackground(new Color(shell.getDisplay(), rgb));
+
 				color = new java.awt.Color(rgb.red, rgb.green, rgb.blue);
 				list.setCellRenderer(new ListCellRenderer(indexes, color));
 			}
