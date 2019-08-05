@@ -49,6 +49,14 @@ public class task1GUI {
 	private javax.swing.DefaultListModel listModel;
 	private javax.swing.JScrollPane scrollPane;
 	private Label colorStatus;
+	private Group tCellValue;
+	private Text cellValue;
+	private Text col;
+	private Text row;
+	private Label lblNewLabel_6;
+	private Label lblNewLabel_7;
+	private Label lblNewLabel_8;
+	private Button btnCellValue;
 	
 	/**
 	 * Launch the application.
@@ -83,10 +91,44 @@ public class task1GUI {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(1120, 865);
+		shell.setSize(1125, 783);
 		shell.setText("ОП. Задание №1");
 		shell.setLayout(new GridLayout(4, false));
-		new Label(shell, SWT.NONE);
+		
+		Group tSizeGroup = new Group(shell, SWT.NONE);
+		GridData gd_tSizeGroup = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_tSizeGroup.widthHint = 183;
+		tSizeGroup.setLayoutData(gd_tSizeGroup);
+		tSizeGroup.setText("Размер таблицы");
+		tSizeGroup.setLayout(new GridLayout(2, false));
+		
+		lblNewLabel = new Label(tSizeGroup, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel.setText("Столбцов");
+		
+		cols = new Text(tSizeGroup, SWT.BORDER);
+		cols.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cols.setBounds(0, 0, 81, 29);
+		cols.setText("10");
+		
+		lblNewLabel_1 = new Label(tSizeGroup, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setText("Строк");
+		
+		rows = new Text(tSizeGroup, SWT.BORDER);
+		rows.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		rows.setBounds(0, 0, 81, 29);
+		rows.setText("10");
+		new Label(tSizeGroup, SWT.NONE);
+		Button btnTableSize = new Button(tSizeGroup, SWT.NONE);
+		btnTableSize.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableSizeAction(e);
+			}
+		});
+		btnTableSize.setBounds(0, 0, 97, 29);
+		btnTableSize.setText("Установить");
 		
 		tFontGroup = new Group(shell, SWT.NONE);
 		tFontGroup.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
@@ -149,38 +191,44 @@ public class task1GUI {
 		}
 		new Label(shell, SWT.NONE);
 		
-		Group tSizeGroup = new Group(shell, SWT.NONE);
-		GridData gd_tSizeGroup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_tSizeGroup.widthHint = 183;
-		tSizeGroup.setLayoutData(gd_tSizeGroup);
-		tSizeGroup.setText("Размер таблицы");
-		tSizeGroup.setLayout(new GridLayout(2, false));
+		tCellValue = new Group(shell, SWT.NONE);
+		tCellValue.setText("Значение ячейки");
+		tCellValue.setLayout(new GridLayout(3, false));
+		tCellValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
-		lblNewLabel = new Label(tSizeGroup, SWT.NONE);
-		lblNewLabel.setText("Столбцов");
+		lblNewLabel_8 = new Label(tCellValue, SWT.NONE);
+		lblNewLabel_8.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_8.setText("Значение");
 		
-		cols = new Text(tSizeGroup, SWT.BORDER);
-		cols.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cols.setBounds(0, 0, 81, 29);
-		cols.setText("10");
+		cellValue = new Text(tCellValue, SWT.BORDER);
+		cellValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cellValue.setText("42");
 		
-		lblNewLabel_1 = new Label(tSizeGroup, SWT.NONE);
-		lblNewLabel_1.setText("Строк");
-		
-		rows = new Text(tSizeGroup, SWT.BORDER);
-		rows.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		rows.setBounds(0, 0, 81, 29);
-		rows.setText("10");
-		new Label(tSizeGroup, SWT.NONE);
-		Button btnTableSize = new Button(tSizeGroup, SWT.NONE);
-		btnTableSize.addSelectionListener(new SelectionAdapter() {
+		btnCellValue = new Button(tCellValue, SWT.NONE);
+		btnCellValue.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tableSizeAction(e);
+				cellValueAction(e);
 			}
 		});
-		btnTableSize.setBounds(0, 0, 97, 29);
-		btnTableSize.setText("Установить");
+		btnCellValue.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 3));
+		btnCellValue.setText("Записать");
+		
+		lblNewLabel_6 = new Label(tCellValue, SWT.NONE);
+		lblNewLabel_6.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_6.setText("Столбец");
+		
+		col = new Text(tCellValue, SWT.BORDER);
+		col.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		col.setText("5");
+		
+		lblNewLabel_7 = new Label(tCellValue, SWT.NONE);
+		lblNewLabel_7.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_7.setText("Строка");
+		
+		row = new Text(tCellValue, SWT.BORDER);
+		row.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		row.setText("5");
 		
 		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
@@ -189,6 +237,7 @@ public class task1GUI {
 		
 		
 		Group tPopulateGroup = new Group(shell, SWT.NONE);
+		tPopulateGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		tPopulateGroup.setText("Данные таблицы");
 		tPopulateGroup.setLayout(new GridLayout(2, false));
 		
@@ -217,7 +266,7 @@ public class task1GUI {
 		
 		Label lblNewLabel_5 = new Label(listGroup, SWT.NONE);
 		lblNewLabel_5.setText("Индекс в списке");
-		lblNewLabel_5.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_5.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		indexesString = new Text(listGroup, SWT.BORDER);
 		indexesString.addKeyListener(new KeyAdapter() {
@@ -235,7 +284,7 @@ public class task1GUI {
 		indexesString.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		colorStatus = new Label(listGroup, SWT.NONE);
-		colorStatus.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		colorStatus.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		colorStatus.setText("Цвет не выбран");
 		
 		btnSelectColor = new Button(listGroup, SWT.NONE);
@@ -325,23 +374,33 @@ public class task1GUI {
 			}
 		}
 	}
-	private int[] getIndexes() {
-		
-		String[] temp = indexesString.getText().replaceAll("\\s", "").split(",");
-		int[] listIndexes = new int[temp.length];
-		
+	private void cellValueAction(SelectionEvent e) {
+		int x = 0;
+		int y = 0;
 		try {
-			for (int i = 0; i < temp.length; i++) {
-				listIndexes[i] = Integer.valueOf(temp[i]);
-			}
-		} catch (Exception e2) {
-				MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
-		        messageBox.setText("Warning");
-		        messageBox.setMessage("Invalid index sequence value format.\nUse the following index sequence format, for example, 1,35,42");
-		        messageBox.open();
-		        return null;
+			x = Integer.valueOf(col.getText());
+			y = Integer.valueOf(row.getText());
+		} catch (NumberFormatException e1) {
+			showMessage("Предупреждение", SWT.ICON_WARNING,
+					"Неверно указано значение колонки/столбца\nДопустимы только целочисленные значения");
+	        return;
 		}
-		return listIndexes;
+		if(table.getColumnCount() < x || table.getItemCount() < y 
+				|| x == 0 || y == 0) {
+			showMessage("Предупреждение", SWT.ICON_WARNING,
+					"Указанная ячейка находится за пределами таблицы");
+	        return;
+		}
+		table.setRedraw(false);
+		
+		TableItem item = table.getItem(y - 1);
+		item.setText(x, cellValue.getText());
+		
+		for (TableColumn column: table.getColumns()) {
+			column.pack();
+		}
+	
+		table.setRedraw(true);
 	}
 	private void openFileAction(SelectionEvent e) {
 		
@@ -366,10 +425,8 @@ public class task1GUI {
 				styledText.setText(new String(data, 0, c));
 				
 			} catch (Exception e1) {
-				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-		        messageBox.setText("Ошибка");
-		        messageBox.setMessage("Ошибка работы с файлом\n" + e1.getMessage());
-		        messageBox.open();
+				showMessage("Ошибка", SWT.ICON_ERROR, 
+						"Ошибка работы с файлом\n" + e1.getMessage());
 			}
 		}
 	}
@@ -381,10 +438,8 @@ public class task1GUI {
 			x = Integer.valueOf(cols.getText());
 			y = Integer.valueOf(rows.getText());
 		} catch (NumberFormatException e1) {
-			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
-	        messageBox.setText("Warning");
-	        messageBox.setMessage("Incorrect row/column value format.\nOnly integer values are allowed");
-	        messageBox.open();
+			showMessage("Предупреждение", SWT.ICON_WARNING,
+					"Неверно указано значение колонок/столбцов\nДопустимы только целочисленные значения");
 	        return;
 		}
 		
@@ -400,9 +455,12 @@ public class task1GUI {
 			/*
 			 * Созданю новый заголовок таблицы
 			 */
-			for (int i = 0; i < x; i++) {
+			TableColumn firstColumn = new TableColumn(table, SWT.NULL);
+			firstColumn.setText("     ");
+
+			for (int i = 1; i <= x; i++) {
 				TableColumn column = new TableColumn(table, SWT.NULL);
-				column.setText("Col " + (i+1));	
+				column.setText("Col " + i);	
 			}
 		}
 		/*
@@ -411,6 +469,11 @@ public class task1GUI {
 		 */
 		table.removeAll();
 		table.setItemCount(y);
+		
+		for (int i = 0; i < y; i++) {
+			TableItem item = table.getItem(i);
+			item.setText("Row " + (i + 1));
+		}
 
 		for (TableColumn column: table.getColumns()) {
 			column.pack();
@@ -427,11 +490,8 @@ public class task1GUI {
 			x = Integer.valueOf(bounds[0]);
 			y = Integer.valueOf(bounds[1]);
 		} catch (Exception e1) {
-			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
-	        
-	        messageBox.setText("Warning");
-	        messageBox.setMessage("Incorrect range value format.\nUse the following format range, for example, 1-125");
-	        messageBox.open();
+			showMessage("Warning", SWT.ICON_WARNING, 
+					"Incorrect range value format.\nUse the following format range, for example, 1-125");
 	        return;
 		}
 		table.setRedraw(false);
@@ -442,7 +502,8 @@ public class task1GUI {
 
 	    for (int i = 0; i < totalRows && x <= y; i++) {
 	    	TableItem item = table.getItem(i);
-	    	for (int j = 0; j < table.getColumnCount() && x <= y; j++) {
+	    	for (int j = 1; j < table.getColumnCount() && x <= y; j++) {
+	    			item.setText("Row " + (i + 1));
 					item.setText(j, Integer.toString(x));
 					x++;
 	    	}
@@ -451,6 +512,29 @@ public class task1GUI {
 			column.pack();
 		}
 		table.setRedraw(true);
+	}
+	private int[] getIndexes() {
+		
+		String[] temp = indexesString.getText().replaceAll("\\s", "").split(",");
+		int[] listIndexes = new int[temp.length];
+		
+		try {
+			for (int i = 0; i < temp.length; i++) {
+				listIndexes[i] = Integer.valueOf(temp[i]);
+			}
+		} catch (Exception e2) {
+				showMessage("Предупреждение", SWT.ICON_WARNING, 
+						"Invalid index sequence value format.\nUse the following index sequence format, for example, 1,35,42");
+		        return null;
+		}
+		return listIndexes;
+	}
+	private void showMessage(String header, int style, String message) {
+		
+		MessageBox messageBox = new MessageBox(shell, style | SWT.OK);
+        messageBox.setText(header);
+        messageBox.setMessage(message);
+        messageBox.open();
 	}
 	private class ListCellRenderer extends javax.swing.DefaultListCellRenderer {
 		
