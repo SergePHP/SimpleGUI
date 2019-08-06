@@ -91,45 +91,58 @@ public class task1GUI {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(1125, 783);
+		shell.setSize(1230, 920);
 		shell.setText("ОП. Задание №1");
-		shell.setLayout(new GridLayout(4, false));
-		
+		GridLayout gl_shell = new GridLayout(3, false);
+		shell.setLayout(gl_shell);
+		/*
+		 * Создаю таблицу, панели для расположения элементов управления 
+		 * и элементы управления для взаимодействия с таблицей 
+		 */
 		Group tSizeGroup = new Group(shell, SWT.NONE);
-		GridData gd_tSizeGroup = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_tSizeGroup.widthHint = 183;
-		tSizeGroup.setLayoutData(gd_tSizeGroup);
+		tSizeGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		tSizeGroup.setText("Размер таблицы");
 		tSizeGroup.setLayout(new GridLayout(2, false));
 		
 		lblNewLabel = new Label(tSizeGroup, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText("Столбцов");
-		
+		/*
+		 * Поле для указания количества столбцов
+		 */
 		cols = new Text(tSizeGroup, SWT.BORDER);
 		cols.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cols.setBounds(0, 0, 81, 29);
-		cols.setText("10");
+		cols.setText("10"); // значение по умолчанию
 		
 		lblNewLabel_1 = new Label(tSizeGroup, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText("Строк");
-		
+		/*
+		 * Поле для указания количества строк
+		 */
 		rows = new Text(tSizeGroup, SWT.BORDER);
 		rows.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		rows.setBounds(0, 0, 81, 29);
-		rows.setText("10");
+		rows.setText("10"); // значение по умолчанию
 		new Label(tSizeGroup, SWT.NONE);
+		
+		/*
+		 * Кнопка, реализующая задание:
+		 * - установить указанное количество строк и столбцов в таблице;
+		 */
 		Button btnTableSize = new Button(tSizeGroup, SWT.NONE);
+		btnTableSize.setText("Установить");
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и вызываю свой метод для обработки события
+		 */
 		btnTableSize.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableSizeAction(e);
 			}
 		});
-		btnTableSize.setBounds(0, 0, 97, 29);
-		btnTableSize.setText("Установить");
-		
+
 		tFontGroup = new Group(shell, SWT.NONE);
 		tFontGroup.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		tFontGroup.setText("Выбор шрифта");
@@ -137,13 +150,27 @@ public class task1GUI {
 		
 		Label lblNewLabel_3 = new Label(tFontGroup, SWT.NONE);
 		lblNewLabel_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_3.setBounds(0, 0, 71, 17);
 		lblNewLabel_3.setText("Список шрифтов");
 		
 		lblNewLabel_4 = new Label(tFontGroup, SWT.NONE);
 		lblNewLabel_4.setText("Стандартный диалог");
-		
+		/*
+		 * Список, реализующий задание:
+		 * - отформатировать текст в таблице шрифтом, выбрав его из заданного списка;
+		 */
 		combo = new Combo(tFontGroup, SWT.NONE);
+		
+		// Получаю массив шрифтов и добавляю их в список
+		
+		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+		for (String string : fonts) {
+			combo.add(string);
+		}
+		/*
+		 * Назначаю обработчик событий выбора пункта в выпадающем списке;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и обрабатываю событие
+		 */
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -160,13 +187,26 @@ public class task1GUI {
 			    table.setRedraw(true);
 			}
 		});
-		combo.setBounds(0, 0, 199, 29);
-		
+		/*
+		 * Кнопка, реализующая задание:
+		 * - отформатировать текст в таблице шрифтом, выбрав его из стандартного диалога выбора шрифта;
+		 */
 		btnFontSelect = new Button(tFontGroup, SWT.NONE);
+		btnFontSelect.setText("Выбрать шрифт");
+		btnFontSelect.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и обрабатываю событие
+		 */
 		btnFontSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				/*
+				 * Создаю экземпляр класса FontDialog,
+				 * который позволяет пользователю выбрать шрифт
+				 * использую стандартный диалог выбора шрифта
+				 */
 				FontDialog fontDialog = new FontDialog(shell);
 			    FontData fontData = fontDialog.open();
 			    if (fontData != null) {
@@ -181,14 +221,7 @@ public class task1GUI {
 			    }
 			}
 		});
-		btnFontSelect.setText("Выбрать шрифт");
-		btnFontSelect.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		new Label(shell, SWT.NONE);
-		
-		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-		for (String string : fonts) {
-			combo.add(string);
-		}
+
 		new Label(shell, SWT.NONE);
 		
 		tCellValue = new Group(shell, SWT.NONE);
@@ -199,65 +232,97 @@ public class task1GUI {
 		lblNewLabel_8 = new Label(tCellValue, SWT.NONE);
 		lblNewLabel_8.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_8.setText("Значение");
+
+		/*
+		 * Текстовое поле для ввода значения,
+		 * которое будет введено в указанную ячейку таблицы
+		 */
 		
 		cellValue = new Text(tCellValue, SWT.BORDER);
 		cellValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cellValue.setText("42");
-		
+		cellValue.setText("42"); // значение по умолчанию
+		/*
+		 * Кнопка, реализующая задание:
+		 * - ввести заданное в поле ввода значение в указанную ячейку таблицы;
+		 */
 		btnCellValue = new Button(tCellValue, SWT.NONE);
+		btnCellValue.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 3));
+		btnCellValue.setText("Записать");
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и вызываю свой метод для обработки события
+		 */
 		btnCellValue.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				cellValueAction(e);
 			}
 		});
-		btnCellValue.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 3));
-		btnCellValue.setText("Записать");
-		
+
 		lblNewLabel_6 = new Label(tCellValue, SWT.NONE);
 		lblNewLabel_6.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_6.setText("Столбец");
 		
+		// Текстовое поле для ввода номера столбца
+
 		col = new Text(tCellValue, SWT.BORDER);
 		col.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		col.setText("5");
+		col.setText("5"); // значение по умолчанию
 		
 		lblNewLabel_7 = new Label(tCellValue, SWT.NONE);
 		lblNewLabel_7.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_7.setText("Строка");
 		
+		// Текстовое поле для ввода номера строки
+		
 		row = new Text(tCellValue, SWT.BORDER);
 		row.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		row.setText("5");
-		
+		row.setText("5"); // значение по умолчанию
+		/*
+		 *  Создаю пустую таблицу
+		 */
 		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
+		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 2);
+		gd_table.heightHint = 300;
+		table.setLayoutData(gd_table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		
 		Group tPopulateGroup = new Group(shell, SWT.NONE);
-		tPopulateGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_tPopulateGroup = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		tPopulateGroup.setLayoutData(gd_tPopulateGroup);
 		tPopulateGroup.setText("Данные таблицы");
 		tPopulateGroup.setLayout(new GridLayout(2, false));
 		
 		lblNewLabel_2 = new Label(tPopulateGroup, SWT.NONE);
 		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_2.setText("Диапазон");
-		
+		/*
+		 * Поле для указания диапазона
+		 */
 		range = new Text(tPopulateGroup, SWT.BORDER);
-		range.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		range.setBounds(0, 0, 81, 29);
-		range.setText("1-100");
+		range.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		range.setText("1-100"); // значение по умолчанию
 		new Label(tPopulateGroup, SWT.NONE);
+		/*
+		 * Кнопка, реализующая задание:
+		 * - заполнить таблицу производными значениями в указанном диапазоне;
+		 */
 		btnTablePopulate = new Button(tPopulateGroup, SWT.NONE);
+		btnTablePopulate.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		btnTablePopulate.setText("Заполнить");
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и вызываю свой метод для обработки события
+		 */
 		btnTablePopulate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tablePopulateAction(e);
 			}
 		});
-		btnTablePopulate.setText("Заполнить");
 		
 		listGroup = new Group(shell, SWT.NONE);
 		listGroup.setText("Поведение списка");
@@ -269,12 +334,20 @@ public class task1GUI {
 		lblNewLabel_5.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		indexesString = new Text(listGroup, SWT.BORDER);
+		/*
+		 * Назначаю обработчик событий нажатия клавиши ENTER в поле ввода;
+		 * Создаю анонимный класс реализующий интерфейс KeyListener;
+		 * Перегружаю метод обработчика и обрабатываю событие
+		 */
 		indexesString.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.keyCode == SWT.CR) {
 					int[] indexes = getIndexes();
 					if(indexes != null && color != null) {
+						/*
+						 * Назначаю пользовальский отрисовщик компонента JList;
+						 */
 						list.setCellRenderer(new ListCellRenderer(indexes, color));
 					}
 				}
@@ -288,6 +361,11 @@ public class task1GUI {
 		colorStatus.setText("Цвет не выбран");
 		
 		btnSelectColor = new Button(listGroup, SWT.NONE);
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и вызываю свой метод для обработки события
+		 */
 		btnSelectColor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -295,11 +373,18 @@ public class task1GUI {
 			}
 		});
 		btnSelectColor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnSelectColor.setBounds(0, 0, 97, 29);
 		btnSelectColor.setText("Установить цвет");
 		new Label(listGroup, SWT.NONE);
-		
+		/*
+		 * Кнопка, реализующая задание
+		 * - установить высоту каждого элемента списка на 5 пунктов больше, чем предыдущего;
+		 */
 		btnIncSize = new Button(listGroup, SWT.NONE);
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и обрабатываю событие
+		 */
 		btnIncSize.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -308,13 +393,12 @@ public class task1GUI {
 			}
 		});
 		GridData gd_btnIncSize = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_btnIncSize.heightHint = 45;
+		gd_btnIncSize.heightHint = 29;
 		btnIncSize.setLayoutData(gd_btnIncSize);
-		btnIncSize.setBounds(0, 0, 97, 29);
-		btnIncSize.setText("Увеличить шрифт\nна 5 пунктов");
+		btnIncSize.setText("Увеличить шрифт");
 		
 		composite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		
 		frame = SWT_AWT.new_Frame(composite);
 		frame.setLayout(new java.awt.BorderLayout(0, 0));
@@ -332,27 +416,36 @@ public class task1GUI {
 
 		listModel = new javax.swing.DefaultListModel();
 		list = new javax.swing.JList(listModel);
+		list.setVisibleRowCount(20);
 		
 		for (String string : fontsForList) {
 			listModel.addElement(string);
 		}
 
 		scrollPane.setViewportView(list);
-		new Label(shell, SWT.NONE);
 		
 		styledText = new StyledText(shell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
-		new Label(shell, SWT.NONE);
 
+		/*
+		 * Кнопка, реализующая задание
+		 * - загрузить файл, выбранный с применением стандартного
+		 * диалога Открыть файл в многострочное текстовое поле.
+		 */
 		btnOpenFile = new Button(shell, SWT.NONE);
-				btnOpenFile.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						openFileAction(e);
-					}
-				});
+		/*
+		 * Назначаю обработчик событий нажатия на кнопку;
+		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
+		 * Перегружаю метод обработчика и обрабатываю событие
+		 */
+		btnOpenFile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openFileAction(e);
+			}
+		});
 		btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnOpenFile.setText("Открыть файл");
 
