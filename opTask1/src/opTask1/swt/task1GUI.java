@@ -353,13 +353,17 @@ public class task1GUI {
 				}
 			}
 		});
-		indexesString.setText("1,4,7");
+		indexesString.setText("1,4,7"); // значение по умолчанию
 		indexesString.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		colorStatus = new Label(listGroup, SWT.NONE);
 		colorStatus.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		colorStatus.setText("Цвет не выбран");
-		
+		/*
+		 * Кнопка, реализующая задание:
+		 * - установить для элемента списка с указанным номером цвет фона, 
+		 * выбрав его из стандартного диалога выбора цвета;
+		 */
 		btnSelectColor = new Button(listGroup, SWT.NONE);
 		/*
 		 * Назначаю обработчик событий нажатия на кнопку;
@@ -380,6 +384,9 @@ public class task1GUI {
 		 * - установить высоту каждого элемента списка на 5 пунктов больше, чем предыдущего;
 		 */
 		btnIncSize = new Button(listGroup, SWT.NONE);
+		GridData gd_btnIncSize = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		btnIncSize.setLayoutData(gd_btnIncSize);
+		btnIncSize.setText("Увеличить шрифт");
 		/*
 		 * Назначаю обработчик событий нажатия на кнопку;
 		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
@@ -392,11 +399,13 @@ public class task1GUI {
 				list.setFont(font.deriveFont((float)font.getSize() + 5));
 			}
 		});
-		GridData gd_btnIncSize = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_btnIncSize.heightHint = 29;
-		btnIncSize.setLayoutData(gd_btnIncSize);
-		btnIncSize.setText("Увеличить шрифт");
-		
+		/*
+		 * Т.к. для входящего в библиотеку SWT компонента List
+		 * нет возможности определить пользовательский отрисовщик
+		 * элементов списка, использую элемент JList из библиотеки Swing.
+		 * Для этого использую класс SWT_AWT, который позволяет 
+		 * встраивать AWT компоненты в SWT приложение.
+		 */
 		composite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		
@@ -408,7 +417,11 @@ public class task1GUI {
 		
 		scrollPane = new javax.swing.JScrollPane();
 		panel.add(scrollPane);
-		
+		/*
+		 * Создаю копию массива шрифтов, 
+		 * добавляю индекс для каждой строки
+		 * начиная с 0 и добавляю их в список 
+		 */
 		String[] fontsForList = fonts.clone();
 		for (int index = 0; index < fontsForList.length; index++) {
 			fontsForList[index] = index + ": " + fontsForList[index];
@@ -421,9 +434,11 @@ public class task1GUI {
 		for (String string : fontsForList) {
 			listModel.addElement(string);
 		}
-
 		scrollPane.setViewportView(list);
 		
+		/*
+		 * Текстовое поле для загрузки файла
+		 */
 		styledText = new StyledText(shell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		new Label(shell, SWT.NONE);
@@ -435,6 +450,8 @@ public class task1GUI {
 		 * диалога Открыть файл в многострочное текстовое поле.
 		 */
 		btnOpenFile = new Button(shell, SWT.NONE);
+		btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		btnOpenFile.setText("Открыть файл");
 		/*
 		 * Назначаю обработчик событий нажатия на кнопку;
 		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
@@ -446,28 +463,43 @@ public class task1GUI {
 				openFileAction(e);
 			}
 		});
-		btnOpenFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnOpenFile.setText("Открыть файл");
-
 	}
+	/*
+	 * Обработчик нажатия кнопки выбора цвета
+	 * используя стандартный диалог 
+	 */
 	private void setColorAction(SelectionEvent e) {
 
+		// получаю массив индексов элементов списка
 		int[] indexes = getIndexes();
 		if(indexes != null) {
 			ColorDialog colorDialog = new ColorDialog(shell);
 			colorDialog.setText("Выбрать цвет");
-			RGB rgb = colorDialog.open();
+			
+			// Открываю стандартный диалог выбора цвета
+			RGB rgb = colorDialog.open(); 
 
 			if(rgb != null) {
 				colorStatus.setText("Выбран цвет");
 				colorStatus.setBackground(new Color(shell.getDisplay(), rgb));
-
+				/*
+				 * Для изменения цвета фона элементов списка JList
+				 * создаю экземпляр типа Color из библиотеки AWT 
+				 */
 				color = new java.awt.Color(rgb.red, rgb.green, rgb.blue);
+				
+				// Назначаю пользовательский отрисовщик элементов списка
 				list.setCellRenderer(new ListCellRenderer(indexes, color));
 			}
 		}
 	}
+	/*
+	 * Обработчик нажатия кнопки ввода
+	 * значения в указанную ячейку таблицы
+	 */
 	private void cellValueAction(SelectionEvent e) {
+		
+		// Получаю координаты ячейки
 		int x = 0;
 		int y = 0;
 		try {
@@ -486,6 +518,10 @@ public class task1GUI {
 		}
 		table.setRedraw(false);
 		
+		/*
+		 * Ввожу заданное в поле ввода значение
+		 * в указанную ячейку таблицы
+		 */
 		TableItem item = table.getItem(y - 1);
 		item.setText(x, cellValue.getText());
 		
@@ -495,14 +531,21 @@ public class task1GUI {
 	
 		table.setRedraw(true);
 	}
+	/*
+	 * Обработчик нажатия кнопки ввода
+	 * значения в указанную ячейку таблицы
+	 */
 	private void openFileAction(SelectionEvent e) {
 		
+		// Создаю экземпляр диалога
         FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
         fileDialog.setText("Открыть");
         fileDialog.setFilterPath("/");
         String[] filterExt = {"*.txt", "*.*"};
         fileDialog.setFilterExtensions(filterExt);
-        if (fileDialog.open() != null) {
+        
+        // Открываю стандартный диалог выбора фала
+        if (fileDialog.open() != null) { 
 
         	File file = new File(fileDialog.getFilterPath(), fileDialog.getFileName());
 			int size = (int)file.length();
@@ -515,6 +558,7 @@ public class task1GUI {
 					c += in.read(data, c, size-c);
 				}
 				in.close();
+				// Загружаю содержимое файла в текстовое поле
 				styledText.setText(new String(data, 0, c));
 				
 			} catch (Exception e1) {
