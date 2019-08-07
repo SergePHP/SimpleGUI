@@ -405,6 +405,8 @@ public class task1GUI {
 		 * элементов списка, использую элемент JList из библиотеки Swing.
 		 * Для этого использую класс SWT_AWT, который позволяет 
 		 * встраивать AWT компоненты в SWT приложение.
+		 * Данный список используется только для демонстрации возможности
+		 * изменения атрибутов указанного элемента списка
 		 */
 		composite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
