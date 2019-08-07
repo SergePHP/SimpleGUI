@@ -634,7 +634,7 @@ public class task1GUI {
 	private void tablePopulateAction(SelectionEvent e) {
 		
 		// получаю начальное и конечное значения диапазона
-		String[] bounds = range.getText().split("-");
+		String[] bounds = range.getText().replaceAll("\\s", "").split("-");
 		int x = 0;
 		int y = 0;
 		
@@ -653,10 +653,10 @@ public class task1GUI {
 		table.setItemCount(totalRows);
 		
 		// Заполняю таблицу значениями
-	    for (int i = 0; i < totalRows && x <= y; i++) {
+	    for (int i = 0; i < totalRows; i++) {
 	    	TableItem item = table.getItem(i);
+	    	item.setText("Row " + (i + 1));
 	    	for (int j = 1; j < table.getColumnCount() && x <= y; j++) {
-	    			item.setText("Row " + (i + 1));
 					item.setText(j, Integer.toString(x));
 					x++;
 	    	}
