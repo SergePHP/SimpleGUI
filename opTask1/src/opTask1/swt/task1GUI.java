@@ -346,7 +346,7 @@ public class task1GUI {
 					int[] indexes = getIndexes();
 					if(indexes != null && color != null) {
 						/*
-						 * Назначаю пользовальский отрисовщик компонента JList;
+						 * Назначаю пользовательский отрисовщик компонента JList;
 						 */
 						list.setCellRenderer(new ListCellRenderer(indexes, color));
 					}
@@ -519,7 +519,7 @@ public class task1GUI {
 		table.setRedraw(false);
 		
 		/*
-		 * Ввожу заданное в поле ввода значение
+		 * Записываю заданное в поле ввода значение
 		 * в указанную ячейку таблицы
 		 */
 		TableItem item = table.getItem(y - 1);
@@ -532,12 +532,12 @@ public class task1GUI {
 		table.setRedraw(true);
 	}
 	/*
-	 * Обработчик нажатия кнопки ввода
-	 * значения в указанную ячейку таблицы
+	 * Обработчик нажатия кнопки выбора файла
+	 * используя стандартный диалог
 	 */
 	private void openFileAction(SelectionEvent e) {
 		
-		// Создаю экземпляр диалога
+		// Создаю экземпляр диалога выбора файла
         FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
         fileDialog.setText("Открыть");
         fileDialog.setFilterPath("/");
@@ -547,6 +547,10 @@ public class task1GUI {
         // Открываю стандартный диалог выбора фала
         if (fileDialog.open() != null) { 
 
+        	/*
+        	 * Открываю файл, считываю содержимое в буфер,
+        	 * закрываю файл.
+        	 */
         	File file = new File(fileDialog.getFilterPath(), fileDialog.getFileName());
 			int size = (int)file.length();
 			int c = 0;
@@ -557,8 +561,9 @@ public class task1GUI {
 				while (in.ready()) {
 					c += in.read(data, c, size-c);
 				}
+				
 				in.close();
-				// Загружаю содержимое файла в текстовое поле
+				// Загружаю содержимое буфера в текстовое поле
 				styledText.setText(new String(data, 0, c));
 				
 			} catch (Exception e1) {
@@ -567,8 +572,13 @@ public class task1GUI {
 			}
 		}
 	}
+	/*
+	 * Обработчик нажатия кнопки
+	 * изменения размера таблицы
+	 */
 	private void tableSizeAction(SelectionEvent e) {
 		
+		// Получаю значения размеров таблицы
 		int x = 0;
 		int y = 0;
 		try {
@@ -590,7 +600,7 @@ public class task1GUI {
 			    table.getColumns()[0].dispose();
 			}
 			/*
-			 * Созданю новый заголовок таблицы
+			 * Создаю новый заголовок таблицы
 			 */
 			TableColumn firstColumn = new TableColumn(table, SWT.NULL);
 			firstColumn.setText("     ");
@@ -601,8 +611,8 @@ public class task1GUI {
 			}
 		}
 		/*
-		 * Удаляю все элементы таблицы
-		 * и указываю новое количество строк
+		 * Удаляю все строки таблицы и создаю новые 
+		 * элементы в указанном в поле ввода количестве
 		 */
 		table.removeAll();
 		table.setItemCount(y);
@@ -617,8 +627,13 @@ public class task1GUI {
 		}
 	    table.setRedraw(true);
 	}
+	/*
+	 * Обработчик нажатия кнопки заполнения
+	 * таблицы значениями в указанном диапазоне
+	 */
 	private void tablePopulateAction(SelectionEvent e) {
 		
+		// получаю начальное и конечное значения диапазона
 		String[] bounds = range.getText().split("-");
 		int x = 0;
 		int y = 0;
@@ -627,8 +642,8 @@ public class task1GUI {
 			x = Integer.valueOf(bounds[0]);
 			y = Integer.valueOf(bounds[1]);
 		} catch (Exception e1) {
-			showMessage("Warning", SWT.ICON_WARNING, 
-					"Incorrect range value format.\nUse the following format range, for example, 1-125");
+			showMessage("Предупреждение", SWT.ICON_WARNING, 
+					"Неверно указан формат диапазона.\nИспользуйте следующий формат ввода: 1-125");
 	        return;
 		}
 		table.setRedraw(false);
@@ -636,7 +651,8 @@ public class task1GUI {
 		int totalRows = table.getItemCount();
 		table.removeAll();
 		table.setItemCount(totalRows);
-
+		
+		// Заполняю таблицу значениями
 	    for (int i = 0; i < totalRows && x <= y; i++) {
 	    	TableItem item = table.getItem(i);
 	    	for (int j = 1; j < table.getColumnCount() && x <= y; j++) {
@@ -650,6 +666,11 @@ public class task1GUI {
 		}
 		table.setRedraw(true);
 	}
+	/*
+	 * Метод предназначен для получения значений
+	 * индексов элементов списка, введенных
+	 * в текстовое поле ввода через запятую
+	 */
 	private int[] getIndexes() {
 		
 		String[] temp = indexesString.getText().replaceAll("\\s", "").split(",");
@@ -666,6 +687,10 @@ public class task1GUI {
 		}
 		return listIndexes;
 	}
+	/*
+	 * Метод предназначен для вывода 
+	 * диалога с сообщением
+	 */
 	private void showMessage(String header, int style, String message) {
 		
 		MessageBox messageBox = new MessageBox(shell, style | SWT.OK);
@@ -673,24 +698,42 @@ public class task1GUI {
         messageBox.setMessage(message);
         messageBox.open();
 	}
+	/*
+	 * Класс предназначен для изменения
+	 * цвета элементов в списке JList 
+	 */
 	private class ListCellRenderer extends javax.swing.DefaultListCellRenderer {
 		
 		private int[] indexes;
 		private java.awt.Color color;
 
-		private ListCellRenderer(int[] i, java.awt.Color c) {
-			this.indexes = i;
-			this.color = c;
+		private ListCellRenderer(int[] indexes, java.awt.Color color) {
+			this.indexes = indexes;
+			this.color = color;
 		}
-		
+		/*
+		 * Перегружаю метод, который возвращает ссылку
+		 * на компонент, подготовленный для отображения
+		 */
 		@Override
 		public java.awt.Component getListCellRendererComponent(javax.swing.JList list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
-
+			
+			/*
+			 *  Вызываю родительский метод, получаю
+			 *  ссылку на компонент, который является
+			 *  элементом списка JList  
+			 */
             java.awt.Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
             if (color != null) {
 
+            	/*
+            	 * Проверяю, совпадает ли индекс элемента
+            	 * с индексом, указанном в поле ввода,
+            	 * если совпадает, меняю цвет фона на цвет,
+            	 * указанный в стандартном диалоге выбора цвета
+            	 */
             	if(Arrays.stream(indexes).anyMatch(x -> x == index)) {
             		c.setBackground(color);
             	}
