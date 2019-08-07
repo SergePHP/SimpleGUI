@@ -510,7 +510,7 @@ public class task1GUI {
 					"Неверно указано значение колонки/столбца\nДопустимы только целочисленные значения");
 	        return;
 		}
-		if(table.getColumnCount() < x || table.getItemCount() < y 
+		if(table.getColumnCount() - 1 < x || table.getItemCount() < y 
 				|| x == 0 || y == 0) {
 			showMessage("Предупреждение", SWT.ICON_WARNING,
 					"Указанная ячейка находится за пределами таблицы");
