@@ -5,6 +5,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+
+import java.awt.BorderLayout;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.FileReader;
@@ -19,6 +21,8 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.layout.RowLayout;
+
 
 public class task1GUI {
 
@@ -48,8 +52,9 @@ public class task1GUI {
 	private javax.swing.JList list;
 	private javax.swing.DefaultListModel listModel;
 	private javax.swing.JScrollPane scrollPane;
+	private javax.swing.JRootPane rootPane;
 	private Label colorStatus;
-	private Group tCellValue;
+	private Group tCellValueGroup;
 	private Text cellValue;
 	private Text col;
 	private Text row;
@@ -90,14 +95,18 @@ public class task1GUI {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		/*
+		 * Создаю таблицу, панели для расположения элементов управления 
+		 * и элементы управления для взаимодействия с таблицей 
+		 */
 		shell = new Shell();
 		shell.setSize(1230, 920);
 		shell.setText("ОП. Задание №1");
 		GridLayout gl_shell = new GridLayout(3, false);
 		shell.setLayout(gl_shell);
 		/*
-		 * Создаю таблицу, панели для расположения элементов управления 
-		 * и элементы управления для взаимодействия с таблицей 
+		 * Группа для элементов управления 
+		 * изменения размеров таблицы
 		 */
 		Group tSizeGroup = new Group(shell, SWT.NONE);
 		tSizeGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -124,7 +133,6 @@ public class task1GUI {
 		rows.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		rows.setText("10"); // значение по умолчанию
 		new Label(tSizeGroup, SWT.NONE);
-		
 		/*
 		 * Кнопка, реализующая задание:
 		 * - установить указанное количество строк и столбцов в таблице;
@@ -142,110 +150,39 @@ public class task1GUI {
 				tableSizeAction(e);
 			}
 		});
-
-		tFontGroup = new Group(shell, SWT.NONE);
-		tFontGroup.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
-		tFontGroup.setText("Выбор шрифта");
-		tFontGroup.setLayout(new GridLayout(2, false));
-		
-		Label lblNewLabel_3 = new Label(tFontGroup, SWT.NONE);
-		lblNewLabel_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_3.setText("Список шрифтов");
-		
-		lblNewLabel_4 = new Label(tFontGroup, SWT.NONE);
-		lblNewLabel_4.setText("Стандартный диалог");
 		/*
-		 * Список, реализующий задание:
-		 * - отформатировать текст в таблице шрифтом, выбрав его из заданного списка;
+		 *  Создаю пустую таблицу
 		 */
-		combo = new Combo(tFontGroup, SWT.NONE);
-		
-		// Получаю массив шрифтов и добавляю их в список
-		
-		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-		for (String string : fonts) {
-			combo.add(string);
-		}
+		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 3);
+		gd_table.heightHint = 300;
+		table.setLayoutData(gd_table);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 		/*
-		 * Назначаю обработчик событий выбора пункта в выпадающем списке;
-		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
-		 * Перегружаю метод обработчика и обрабатываю событие
+		 * Группа для элементов управления ввода
+		 * значения в указанную ячейку таблицы
 		 */
-		combo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				table.setRedraw(false);
-				String selectedFont = String.valueOf(combo.getText());
-				FontData fontData = table.getFont().getFontData()[0];
-				fontData.setName(selectedFont);
-				
-				Font font = new Font(shell.getDisplay(), fontData);
-				table.setFont(font);
-				for (TableColumn column: table.getColumns()) {
-					column.pack();
-				}
-			    table.setRedraw(true);
-			}
-		});
-		/*
-		 * Кнопка, реализующая задание:
-		 * - отформатировать текст в таблице шрифтом, выбрав его из стандартного диалога выбора шрифта;
-		 */
-		btnFontSelect = new Button(tFontGroup, SWT.NONE);
-		btnFontSelect.setText("Выбрать шрифт");
-		btnFontSelect.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		/*
-		 * Назначаю обработчик событий нажатия на кнопку;
-		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
-		 * Перегружаю метод обработчика и обрабатываю событие
-		 */
-		btnFontSelect.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				/*
-				 * Создаю экземпляр класса FontDialog,
-				 * который позволяет пользователю выбрать шрифт
-				 * использую стандартный диалог выбора шрифта
-				 */
-				FontDialog fontDialog = new FontDialog(shell);
-			    FontData fontData = fontDialog.open();
-			    if (fontData != null) {
-			    	
-			    	table.setRedraw(false);
-			    	Font font = new Font(shell.getDisplay(), fontData);
-			    	table.setFont(font);
-					for (TableColumn column: table.getColumns()) {
-						column.pack();
-					}
-				    table.setRedraw(true);
-			    }
-			}
-		});
-
-		new Label(shell, SWT.NONE);
+		tCellValueGroup = new Group(shell, SWT.NONE);
+		tCellValueGroup.setText("Значение ячейки");
+		tCellValueGroup.setLayout(new GridLayout(3, false));
+		tCellValueGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
-		tCellValue = new Group(shell, SWT.NONE);
-		tCellValue.setText("Значение ячейки");
-		tCellValue.setLayout(new GridLayout(3, false));
-		tCellValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
-		lblNewLabel_8 = new Label(tCellValue, SWT.NONE);
+		lblNewLabel_8 = new Label(tCellValueGroup, SWT.NONE);
 		lblNewLabel_8.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_8.setText("Значение");
-
 		/*
 		 * Текстовое поле для ввода значения,
 		 * которое будет введено в указанную ячейку таблицы
 		 */
-		
-		cellValue = new Text(tCellValue, SWT.BORDER);
+		cellValue = new Text(tCellValueGroup, SWT.BORDER);
 		cellValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cellValue.setText("42"); // значение по умолчанию
 		/*
 		 * Кнопка, реализующая задание:
 		 * - ввести заданное в поле ввода значение в указанную ячейку таблицы;
 		 */
-		btnCellValue = new Button(tCellValue, SWT.NONE);
+		btnCellValue = new Button(tCellValueGroup, SWT.NONE);
 		btnCellValue.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 3));
 		btnCellValue.setText("Записать");
 		/*
@@ -259,39 +196,31 @@ public class task1GUI {
 				cellValueAction(e);
 			}
 		});
-
-		lblNewLabel_6 = new Label(tCellValue, SWT.NONE);
+		lblNewLabel_6 = new Label(tCellValueGroup, SWT.NONE);
 		lblNewLabel_6.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_6.setText("Столбец");
 		
 		// Текстовое поле для ввода номера столбца
 
-		col = new Text(tCellValue, SWT.BORDER);
+		col = new Text(tCellValueGroup, SWT.BORDER);
 		col.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		col.setText("5"); // значение по умолчанию
 		
-		lblNewLabel_7 = new Label(tCellValue, SWT.NONE);
+		lblNewLabel_7 = new Label(tCellValueGroup, SWT.NONE);
 		lblNewLabel_7.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_7.setText("Строка");
 		
 		// Текстовое поле для ввода номера строки
 		
-		row = new Text(tCellValue, SWT.BORDER);
+		row = new Text(tCellValueGroup, SWT.BORDER);
 		row.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		row.setText("5"); // значение по умолчанию
 		/*
-		 *  Создаю пустую таблицу
+		 * Группа для элементов управления заполнения
+		 * таблицы значениями из указанного диапазона 
 		 */
-		table = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 2);
-		gd_table.heightHint = 300;
-		table.setLayoutData(gd_table);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		
 		Group tPopulateGroup = new Group(shell, SWT.NONE);
-		GridData gd_tPopulateGroup = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		tPopulateGroup.setLayoutData(gd_tPopulateGroup);
+		tPopulateGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		tPopulateGroup.setText("Данные таблицы");
 		tPopulateGroup.setLayout(new GridLayout(2, false));
 		
@@ -299,7 +228,7 @@ public class task1GUI {
 		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_2.setText("Диапазон");
 		/*
-		 * Поле для указания диапазона
+		 * Поле для указания диапазона значений
 		 */
 		range = new Text(tPopulateGroup, SWT.BORDER);
 		range.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -323,7 +252,108 @@ public class task1GUI {
 				tablePopulateAction(e);
 			}
 		});
+		/*
+		 * Группа для элементов управления выбора шрифта
+		 * для форматирования текста таблицы
+		 * используя стандартный диалог выбора шрифта
+		 */
+		tFontGroup = new Group(shell, SWT.NONE);
+		tFontGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+		GridData gd_tFontGroup = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		tFontGroup.setLayoutData(gd_tFontGroup);
+		tFontGroup.setText("Выбор шрифта");
 		
+		lblNewLabel_4 = new Label(tFontGroup, SWT.NONE);
+		lblNewLabel_4.setText("Стандартный диалог");
+
+		btnFontSelect = new Button(tFontGroup, SWT.NONE);
+		btnFontSelect.setText("Выбрать шрифт");
+		btnFontSelect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				/*
+				 * Создаю экземпляр класса FontDialog,
+				 * который позволяет пользователю выбрать шрифт
+				 * использую стандартный диалог выбора шрифта
+				 */
+				FontDialog fontDialog = new FontDialog(shell);
+			    FontData fontData = fontDialog.open();
+			    if (fontData != null) {
+			    	
+			    	table.setRedraw(false);
+			    	Font font = new Font(shell.getDisplay(), fontData);
+			    	table.setFont(font);
+					for (TableColumn column: table.getColumns()) {
+						column.pack();
+					}
+				    table.setRedraw(true);
+			    }
+			}
+		});
+
+		composite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 2);
+		gd_composite.widthHint = 225;
+		composite.setLayoutData(gd_composite);
+		/*
+		 * Т.к. для входящего в библиотеку SWT компонента List
+		 * нет возможности определить пользовательский отрисовщик
+		 * элементов списка, использую элемент JList из библиотеки Swing.
+		 * Для этого использую класс SWT_AWT, который позволяет 
+		 * встраивать AWT компоненты в SWT приложение.
+		 */
+		frame = SWT_AWT.new_Frame(composite);
+		
+		panel = new java.awt.Panel();
+		frame.add(panel);
+		panel.setLayout(new java.awt.BorderLayout(0, 0));
+		
+		rootPane = new javax.swing.JRootPane();
+		panel.add(rootPane);
+		
+		scrollPane = new javax.swing.JScrollPane();
+		rootPane.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		
+		/*
+		 * Создаю экземпляр модели списка
+		 */
+		listModel = new javax.swing.DefaultListModel();
+		/*
+		 * Получаю массив, который содержит список всех шрифтов, 
+		 * добавляю индекс для каждой строки
+		 * начиная с 0 и добавляю их в модель списка
+		 */
+		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
+		for (int index = 0; index < fonts.length; index++) {
+			fonts[index] = index + ": " + fonts[index];
+		}
+		for (String string : fonts) {
+			listModel.addElement(string);
+		}
+		/*
+		 * Список, реализующий задание:
+		 * - отформатировать текст в таблице шрифтом, выбрав его из заданного списка;
+		 */
+		list = new javax.swing.JList(listModel);
+		/*
+		 * Назначаю пользовательский обработчик
+		 * событий выбора элемента списка
+		 */
+		list.addListSelectionListener(new swingListSelectionListener());
+		list.setVisibleRowCount(20);
+		scrollPane.setViewportView(list);
+		/*
+		 * Текстовое поле для загрузки файла
+		 */
+		styledText = new StyledText(shell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		/*
+		 * Группа для элементов управления изменения
+		 * цвета фона указанного пункта списка
+		 * используя стандартный диалог выбора цвета
+		 * и увеличения размера шрифта на 5 пунктов
+		 */
 		listGroup = new Group(shell, SWT.NONE);
 		listGroup.setText("Поведение списка");
 		listGroup.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -333,7 +363,10 @@ public class task1GUI {
 		lblNewLabel_5.setText("Индекс в списке");
 		lblNewLabel_5.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
+		// Поле для ввода индексов пунктов списка
 		indexesString = new Text(listGroup, SWT.BORDER);
+		indexesString.setText("1,4,7"); // значение по умолчанию
+		indexesString.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		/*
 		 * Назначаю обработчик событий нажатия клавиши ENTER в поле ввода;
 		 * Создаю анонимный класс реализующий интерфейс KeyListener;
@@ -353,9 +386,8 @@ public class task1GUI {
 				}
 			}
 		});
-		indexesString.setText("1,4,7"); // значение по умолчанию
-		indexesString.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		// Метка для отображения статуса выбран ли цвет 
 		colorStatus = new Label(listGroup, SWT.NONE);
 		colorStatus.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		colorStatus.setText("Цвет не выбран");
@@ -365,6 +397,9 @@ public class task1GUI {
 		 * выбрав его из стандартного диалога выбора цвета;
 		 */
 		btnSelectColor = new Button(listGroup, SWT.NONE);
+		btnSelectColor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnSelectColor.setText("Установить цвет");
+		new Label(listGroup, SWT.NONE);
 		/*
 		 * Назначаю обработчик событий нажатия на кнопку;
 		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
@@ -376,17 +411,15 @@ public class task1GUI {
 				setColorAction(e);
 			}
 		});
-		btnSelectColor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnSelectColor.setText("Установить цвет");
-		new Label(listGroup, SWT.NONE);
 		/*
 		 * Кнопка, реализующая задание
 		 * - установить высоту каждого элемента списка на 5 пунктов больше, чем предыдущего;
 		 */
 		btnIncSize = new Button(listGroup, SWT.NONE);
-		GridData gd_btnIncSize = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		btnIncSize.setLayoutData(gd_btnIncSize);
+		btnIncSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnIncSize.setText("Увеличить шрифт");
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
 		/*
 		 * Назначаю обработчик событий нажатия на кнопку;
 		 * Создаю анонимный класс реализующий интерфейс SelectionListener;
@@ -400,54 +433,7 @@ public class task1GUI {
 			}
 		});
 		/*
-		 * Т.к. для входящего в библиотеку SWT компонента List
-		 * нет возможности определить пользовательский отрисовщик
-		 * элементов списка, использую элемент JList из библиотеки Swing.
-		 * Для этого использую класс SWT_AWT, который позволяет 
-		 * встраивать AWT компоненты в SWT приложение.
-		 * Данный список используется только для демонстрации возможности
-		 * изменения атрибутов указанного элемента списка
-		 */
-		composite = new Composite(shell, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-		
-		frame = SWT_AWT.new_Frame(composite);
-		frame.setLayout(new java.awt.BorderLayout(0, 0));
-		panel = new java.awt.Panel();
-		frame.add(panel);
-		panel.setLayout(new java.awt.FlowLayout());
-		
-		scrollPane = new javax.swing.JScrollPane();
-		panel.add(scrollPane);
-		/*
-		 * Создаю копию массива шрифтов, 
-		 * добавляю индекс для каждой строки
-		 * начиная с 0 и добавляю их в список 
-		 */
-		String[] fontsForList = fonts.clone();
-		for (int index = 0; index < fontsForList.length; index++) {
-			fontsForList[index] = index + ": " + fontsForList[index];
-		}
-
-		listModel = new javax.swing.DefaultListModel();
-		list = new javax.swing.JList(listModel);
-		list.setVisibleRowCount(20);
-		
-		for (String string : fontsForList) {
-			listModel.addElement(string);
-		}
-		scrollPane.setViewportView(list);
-		
-		/*
-		 * Текстовое поле для загрузки файла
-		 */
-		styledText = new StyledText(shell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		new Label(shell, SWT.NONE);
-		new Label(shell, SWT.NONE);
-
-		/*
-		 * Кнопка, реализующая задание
+		 * Кнопка, реализующая задание:
 		 * - загрузить файл, выбранный с применением стандартного
 		 * диалога Открыть файл в многострочное текстовое поле.
 		 */
@@ -512,6 +498,7 @@ public class task1GUI {
 					"Неверно указано значение колонки/столбца\nДопустимы только целочисленные значения");
 	        return;
 		}
+		// Проверяю, находятся ли координаты за пределами таблицы
 		if(table.getColumnCount() - 1 < x || table.getItemCount() < y 
 				|| x == 0 || y == 0) {
 			showMessage("Предупреждение", SWT.ICON_WARNING,
@@ -742,6 +729,49 @@ public class task1GUI {
             }
             return c;
         }
+	}
+	/*
+	 * Класс предназначен для форматирования текста таблицы
+	 * шрифтом, выбранным в списке JList 
+	 */
+	private class swingListSelectionListener implements javax.swing.event.ListSelectionListener {
+
+		@Override
+		public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+			
+			/*
+			 * т.к отображение Swing компонентов реализуется 
+			 * в отдельном потоке, а SWT реализует однопоточную
+			 * UI модель, то для доступа к полям и методам
+			 * основного UI-потока необходимо использовать методы 
+			 * syncExec(Runnable runnable) и 
+			 * asyncExec(Runnable runnable) объекта Display
+			 */
+			
+			Display display = Display.getDefault();
+			display.syncExec(
+					  new Runnable() {
+					    public void run(){
+							table.setRedraw(false);
+							
+							// Получаю имя выбранного шрифта 
+							String selectedFont = String.valueOf(list.getSelectedValue()).split(":")[1].substring(1);
+							/*
+							 * Получаю описание текущего шрифта таблицы;
+							 * Создаю новый шрифт с текущими атрибутами;
+							 * Форматирую таблицу выбранным шрифтом
+							 */
+							FontData fontData = table.getFont().getFontData()[0];
+							fontData.setName(selectedFont);
+							Font font = new Font(shell.getDisplay(), fontData);
+							table.setFont(font);
+							for (TableColumn column: table.getColumns()) {
+								column.pack();
+							}
+						    table.setRedraw(true);
+					    }
+					  });
+		}
 	}
 }
 
