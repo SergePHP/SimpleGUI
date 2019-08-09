@@ -671,7 +671,7 @@ public class task1GUI {
 			}
 		} catch (Exception e2) {
 				showMessage("Предупреждение", SWT.ICON_WARNING, 
-						"Invalid index sequence value format.\nUse the following index sequence format, for example, 1,35,42");
+						"Неверно указана последовательность индексов.\nИспользуйте следующий формат ввода: 1,35,42");
 		        return null;
 		}
 		return listIndexes;
