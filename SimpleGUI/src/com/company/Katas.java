@@ -34,12 +34,10 @@ public class Katas {
 				++multiplier;
 			} while (value != 1);
 
-			SortedSet<Integer> dividers = new TreeSet<>();
-			
 			Set<Map.Entry<Integer, Integer>> set = canonical.entrySet();
 			Iterator<Entry<Integer, Integer>> iterator = set.iterator();
 			
-			getDividers(iterator);
+			SortedSet<Integer> dividers = getDividers(iterator);
 			
 			
 			int a = 0;
@@ -47,11 +45,11 @@ public class Katas {
 		
 		return "";
 	}
-	public static ArrayList<Integer> getDividers(Iterator<Entry<Integer, Integer>> iterator){
+	public static SortedSet<Integer> getDividers(Iterator<Entry<Integer, Integer>> iterator){
 		
 		
 		
 		
-		return new ArrayList<Integer>();
+		return new TreeSet<>();
 	}
 }
